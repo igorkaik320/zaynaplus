@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { AtSign, Lock } from 'lucide-react';
-import { MdsLogo } from '@/components/MdsLogo';
+import { ZaynaLogo } from '@/components/ZaynaLogo';
 
 export default function Auth() {
   const { signIn, signUp } = useAuth();
@@ -32,19 +32,15 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-cyan-50 px-4 py-12">
       <div className="mx-auto flex w-full max-w-4xl flex-col items-center justify-center gap-8">
-        <div className="text-center text-sm uppercase tracking-[0.5em] text-slate-200">Plataforma MDS Gestão</div>
-        <Card className="w-full max-w-md rounded-[28px] border border-white/10 bg-white/90 shadow-[0_25px_80px_rgba(15,23,42,0.45)] backdrop-blur">
+        <div className="text-center text-xs uppercase tracking-[0.5em] text-teal-700/70">Plataforma Clínica Zayna</div>
+        <Card className="w-full max-w-md rounded-[28px] border border-teal-100 bg-white shadow-[0_25px_60px_rgba(20,184,166,0.18)]">
           <CardHeader className="text-center">
-            <div className="flex flex-col items-center gap-1">
-              <MdsLogo
-                className="flex items-center gap-1 justify-center"
-                lettersClassName="text-3xl font-black uppercase tracking-[0.05em] text-slate-900 dark:text-white"
-                textClassName="text-xs font-semibold uppercase tracking-[0.35em] text-blue-600 -mb-1 whitespace-nowrap"
-              />
+            <div className="flex flex-col items-center gap-2">
+              <ZaynaLogo className="flex items-center justify-center" imgClassName="h-14 w-auto" />
               <p className="text-muted-foreground text-sm">{isLogin ? 'Entre na sua conta' : 'Crie sua conta'}</p>
-              <p className="text-xs text-slate-500">Acesse o painel executivo com segurança</p>
+              <p className="text-xs text-slate-500">Sistema de gestão da clínica</p>
             </div>
           </CardHeader>
           <CardContent>
@@ -83,7 +79,7 @@ export default function Auth() {
               </div>
               <Button
                 type="submit"
-                className="w-full rounded-2xl bg-slate-900 px-4 py-3 text-base font-semibold text-white shadow-[0_15px_30px_rgba(15,23,42,0.35)] transition hover:-translate-y-0.5 hover:bg-slate-800"
+                className="w-full rounded-2xl bg-teal-500 px-4 py-3 text-base font-semibold text-white shadow-[0_15px_30px_rgba(20,184,166,0.35)] transition hover:-translate-y-0.5 hover:bg-teal-600"
                 disabled={loading}
               >
                 {loading ? 'Aguarde...' : isLogin ? 'Entrar' : 'Cadastrar'}
@@ -94,7 +90,7 @@ export default function Auth() {
             </form>
           </CardContent>
         </Card>
-        <p className="text-center text-xs uppercase tracking-[0.45em] text-white/40">2026 • MDS Gestão</p>
+        <p className="text-center text-xs uppercase tracking-[0.45em] text-teal-700/40">2026 • Clínica Zayna</p>
       </div>
     </div>
   );
