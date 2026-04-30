@@ -64,49 +64,22 @@ export function AppSidebar() {
 
   const groups: MenuGroup[] = [];
 
-  if (isAdmin) {
-    groups.push({
-      key: 'admin',
-      label: 'Administração',
-      icon: AdminIcon,
-      items: [{ title: 'Painel Executivo', url: '/painel-executivo', icon: LayoutDashboard }],
-    });
-  }
-
   groups.push({
     key: 'financeiro',
     label: 'Financeiro',
     icon: CircleDollarSign,
     items: [
-      { title: 'Contas a Pagar', url: '/contas-pagar', icon: Package, module: 'contas_pagar' },
       { title: 'Controle de Caixa', url: '/controle-caixa', icon: Landmark, module: 'controle_caixa' },
-      { title: 'Parcelas Faturadas', url: '/financeiro/parcelas-faturadas', icon: FileBarChart, module: 'parcelas_faturadas' },
+      { title: 'Contas a Pagar', url: '/contas-pagar', icon: Package, module: 'contas_pagar' },
     ],
   });
 
   groups.push({
-    key: 'compras',
-    label: 'Compras',
-    icon: Package,
+    key: 'cadastros',
+    label: 'Cadastros',
+    icon: Cog,
     items: [
-      { title: 'Compras Faturadas', url: '/compras/faturadas', icon: Receipt, module: 'compras_faturadas' },
-      { title: 'Compras à Vista', url: '/compras/avista', icon: ShoppingCart, module: 'compras_avista' },
-      { title: 'Espelho Geral', url: '/compras/espelho', icon: Eye, module: 'espelho_geral' },
-      { title: 'Programação Semanal', url: '/compras/programacao-semanal', icon: CalendarDays, module: 'programacao_semanal' },
-      { title: 'Espelho Semanal', url: '/compras/espelho-semanal', icon: BarChart3, module: 'espelho_semanal' },
-    ],
-  });
-
-  groups.push({
-    key: 'ativos',
-    label: 'Gestão de Ativos',
-    icon: Truck,
-    items: [
-      { title: 'Dashboard', url: '/combustivel/dashboard', icon: Fuel, module: 'combustivel_dashboard' },
-      { title: 'Abastecimentos', url: '/combustivel/abastecimentos', icon: Droplets, module: 'abastecimentos' },
-      { title: 'Revisões', url: '/combustivel/revisoes', icon: Wrench, module: 'revisoes_combustivel' },
-      { title: 'Equipamentos', url: '/equipamentos', icon: Archive, module: 'equipamentos' },
-      { title: 'Serviços de Máquinas', url: '/servicos-maquinas', icon: Wrench, module: 'servicos_maquinas' },
+      { title: 'Fornecedores', url: '/fornecedores', icon: Truck, module: 'fornecedores' },
     ],
   });
 
@@ -117,28 +90,9 @@ export function AppSidebar() {
       icon: Lock,
       items: [
         { title: 'Usuários', url: '/usuarios', icon: Users },
-        { title: 'Auditoria', url: '/auditoria', icon: History },
-        { title: 'Config. Relatório', url: '/config-relatorio', icon: Settings },
       ],
     });
   }
-
-  groups.push({
-    key: 'cadastros',
-    label: 'Cadastros',
-    icon: Cog,
-    items: [
-      { title: 'Empresas', url: '/empresas', icon: Factory, module: 'empresas' },
-      { title: 'Fornecedores', url: '/fornecedores', icon: Truck, module: 'fornecedores' },
-      { title: 'Obras', url: '/obras', icon: Building2, module: 'obras' },
-      { title: 'Responsáveis', url: '/responsaveis', icon: UserCheck, module: 'responsaveis' },
-      { title: 'Veículos/Máquinas', url: '/veiculos', icon: Car, module: 'veiculos_maquinas' },
-      { title: 'Setores', url: '/setores', icon: MapPin, module: 'setores' },
-      { title: 'Postos de Combustível', url: '/postos-combustivel', icon: MapPinned, module: 'postos_combustivel' },
-      { title: 'Tipos de Combustível', url: '/tipos-combustivel', icon: Flame, module: 'tipos_combustivel' },
-      { title: 'Componentes / Peças', url: '/componentes-maquinas', icon: Cog, module: 'componentes_maquinas' },
-    ],
-  });
 
   // Detect which group is active based on current route
   const currentGroupKey = groups.find((g) =>
