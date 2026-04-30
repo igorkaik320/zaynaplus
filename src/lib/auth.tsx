@@ -143,7 +143,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signIn = async (email: string, password: string) => {
     const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
     const diag = {
-      app: "ControlMDS",
+      app: "Gestão Zayna",
       url: SUPABASE_URL,
       origin: typeof window !== "undefined" ? window.location.origin : "n/a",
       userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "n/a",
@@ -152,7 +152,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     // 1) Pré-checagem de conectividade direta com o Supabase (isola DNS/firewall/extensões)
-    console.groupCollapsed("%c[ControlMDS] Diagnóstico de Login", "color:#2563eb;font-weight:bold");
+    console.groupCollapsed("%c[Gestão Zayna] Diagnóstico de Login", "color:#2563eb;font-weight:bold");
     console.log("Ambiente:", diag);
     try {
       const probeStart = performance.now();
@@ -214,7 +214,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         error: {
           ...error,
           message:
-            "Não foi possível conectar ao servidor. Abra o DevTools (F12) → aba Console e envie o bloco '[ControlMDS] Diagnóstico de Login' para o suporte. Tente também: (1) Ctrl+Shift+R, (2) aba anônima, (3) trocar DNS para 1.1.1.1, (4) desativar VPN/antivírus.",
+            "Não foi possível conectar ao servidor. Abra o DevTools (F12) → aba Console e envie o bloco '[Gestão Zayna] Diagnóstico de Login' para o suporte. Tente também: (1) Ctrl+Shift+R, (2) aba anônima, (3) trocar DNS para 1.1.1.1, (4) desativar VPN/antivírus.",
         },
       };
     }

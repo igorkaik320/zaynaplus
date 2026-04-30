@@ -36,7 +36,6 @@ const AbastecimentosPage = lazy(() => import("./pages/AbastecimentosPage"));
 const DashboardCombustivelPage = lazy(() => import("./pages/DashboardCombustivelPage"));
 const RevisoesCombustivelPage = lazy(() => import("./pages/RevisoesCombustivelPage"));
 const EmpresasPage = lazy(() => import("./pages/EmpresasPage"));
-const PainelExecutivoPage = lazy(() => import("./pages/PainelExecutivoPage"));
 const FaturadosParcelasPage = lazy(() => import("./pages/FaturadosParcelasPage"));
 const ContasPagarPage = lazy(() => import("@/pages/ContasPagarPage"));
 const ServicosMaquinasPage = lazy(() => import("./pages/ServicosMaquinasPage"));
@@ -107,7 +106,7 @@ function HomeRoute() {
   if (!user) return <Navigate to="/auth" />;
   if (permLoading) return <LoadingScreen />;
 
-  if (userRole === "admin") return <Navigate to="/painel-executivo" replace />;
+  if (userRole === "admin") return <Navigate to="/controle-caixa" replace />;
 
   const firstAccessibleRoute: Array<{ module: ModuleKey; path: string }> = [
     { module: "compras_faturadas", path: "/compras/faturadas" },
@@ -268,7 +267,7 @@ const App = () => (
                   element={<ModuleRoute module="componentes_maquinas"><ComponentesMaquinasPage /></ModuleRoute>}
                 />
 
-                <Route path="/painel-executivo" element={<AdminRoute><PainelExecutivoPage /></AdminRoute>} />
+                <Route path="/painel-executivo" element={<Navigate to="/controle-caixa" replace />} />
                 <Route path="/usuarios" element={<AdminRoute><UserManagement /></AdminRoute>} />
                 <Route path="/auditoria" element={<AdminRoute><AuditLog /></AdminRoute>} />
                 <Route path="/config-relatorio" element={<AdminRoute><ConfigRelatorioPage /></AdminRoute>} />
