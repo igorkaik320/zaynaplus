@@ -149,10 +149,10 @@ export function AppSidebar() {
     <TooltipProvider delayDuration={100}>
       <div className="sticky top-0 flex h-screen shrink-0">
         {/* Icon strip */}
-        <div className="flex w-[60px] flex-col items-center border-r border-white/10 bg-[#0f1a2d] py-4">
+        <div className="flex w-[60px] flex-col items-center border-r border-teal-100 bg-white py-4">
           {/* Logo */}
-          <div className="mb-6 flex h-10 w-10 items-center justify-center">
-            <span className="text-lg font-black text-white tracking-wider">M</span>
+          <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500 text-white shadow-md">
+            <span className="text-lg font-black tracking-wider">Z</span>
           </div>
 
           {/* Group icons */}
@@ -169,10 +169,10 @@ export function AppSidebar() {
                       className={cn(
                         'flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-150',
                         isOpen
-                          ? 'bg-blue-500 text-white shadow-[0_4px_14px_rgba(59,130,246,0.4)]'
+                          ? 'bg-teal-500 text-white shadow-[0_4px_14px_rgba(20,184,166,0.4)]'
                           : isGroupActive
-                          ? 'bg-white/15 text-white'
-                          : 'text-white/50 hover:bg-white/8 hover:text-white/80'
+                          ? 'bg-teal-50 text-teal-700'
+                          : 'text-slate-500 hover:bg-teal-50 hover:text-teal-700'
                       )}
                     >
                       <group.icon className="h-5 w-5" />
@@ -191,7 +191,7 @@ export function AppSidebar() {
             <TooltipTrigger asChild>
               <button
                 onClick={handleSignOut}
-                className="flex h-10 w-10 items-center justify-center rounded-xl text-white/50 transition-all hover:bg-white/8 hover:text-white/80"
+                className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-500 transition-all hover:bg-rose-50 hover:text-rose-600"
               >
                 <LogOut className="h-5 w-5" />
               </button>
@@ -205,29 +205,29 @@ export function AppSidebar() {
         {/* Expandable subitems panel */}
         <div
           className={cn(
-            'flex flex-col overflow-hidden bg-[#233247] transition-all duration-250 ease-in-out',
-            openGroup ? 'w-[220px] border-r border-white/10' : 'w-0'
+            'flex flex-col overflow-hidden bg-teal-50/40 transition-all duration-250 ease-in-out',
+            openGroup ? 'w-[220px] border-r border-teal-100' : 'w-0'
           )}
         >
           {openGroup && (
             <div className="flex h-full w-[220px] flex-col">
               {/* Panel header */}
-              <div className="flex items-center justify-between border-b border-white/10 px-4 py-4">
-                <h2 className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60">
+              <div className="flex items-center justify-between border-b border-teal-100 px-4 py-4">
+                <h2 className="text-xs font-semibold uppercase tracking-[0.15em] text-teal-700/70">
                   {openGroup.label}
                 </h2>
                 <button
                   onClick={() => setActiveGroup(null)}
-                  className="rounded p-1 text-white/40 hover:bg-white/10 hover:text-white/70"
+                  className="rounded p-1 text-slate-400 hover:bg-teal-100 hover:text-teal-700"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </button>
               </div>
 
               {/* User info */}
-              <div className="border-b border-white/10 px-4 py-3">
-                <p className="truncate text-sm text-white/75">{profile?.display_name}</p>
-                <span className="mt-1 inline-flex rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-medium text-white/80">
+              <div className="border-b border-teal-100 px-4 py-3">
+                <p className="truncate text-sm text-slate-700">{profile?.display_name}</p>
+                <span className="mt-1 inline-flex rounded-full bg-teal-100 px-2 py-0.5 text-[10px] font-medium text-teal-700">
                   {userRole === 'admin'
                     ? 'Administração'
                     : userRole === 'conferente'
