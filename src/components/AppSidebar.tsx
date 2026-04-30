@@ -110,7 +110,7 @@ export function AppSidebar() {
     if (locked) {
       return (
         <li key={item.url}>
-          <div className="flex cursor-not-allowed items-center gap-3 rounded-lg px-3 py-2.5 text-white/30">
+          <div className="flex cursor-not-allowed items-center gap-3 rounded-lg px-3 py-2.5 text-slate-400">
             <item.icon className="h-4 w-4 shrink-0" />
             <span className="text-sm">{item.title}</span>
             <Lock className="ml-auto h-3.5 w-3.5" />
@@ -126,8 +126,8 @@ export function AppSidebar() {
         <NavLink
           to={item.url}
           className={cn(
-            'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-white/75 transition-all duration-150 hover:bg-white/10 hover:text-white',
-            isActive && 'bg-blue-500/90 text-white font-semibold shadow-[0_4px_14px_rgba(59,130,246,0.35)]'
+            'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-700 transition-all duration-150 hover:bg-teal-100/60 hover:text-teal-800',
+            isActive && 'bg-teal-500 text-white font-semibold shadow-[0_4px_14px_rgba(20,184,166,0.35)] hover:bg-teal-500 hover:text-white'
           )}
           activeClassName=""
         >
