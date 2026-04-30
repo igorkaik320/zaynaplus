@@ -34,48 +34,65 @@ export default function Auth() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-cyan-50 px-4 py-12">
       <div className="mx-auto flex w-full max-w-4xl flex-col items-center justify-center gap-8">
-        <div className="text-center text-xs uppercase tracking-[0.5em] text-teal-700/70">Plataforma Clínica Zayna</div>
         <Card className="w-full max-w-md rounded-[28px] border border-teal-100 bg-white shadow-[0_25px_60px_rgba(20,184,166,0.18)]">
-          <CardHeader className="text-center">
-            <div className="flex flex-col items-center gap-2">
-              <ZaynaLogo className="flex items-center justify-center" imgClassName="h-14 w-auto" />
-              <p className="text-muted-foreground text-sm">{isLogin ? 'Entre na sua conta' : 'Crie sua conta'}</p>
-              <p className="text-xs text-slate-500">Sistema de gestão da clínica</p>
+          <CardHeader className="text-center pb-6">
+            <div className="flex flex-col items-center gap-4">
+              <ZaynaLogo className="flex items-center justify-center" imgClassName="h-16 w-auto" />
+              <div>
+                <h1 className="text-2xl font-bold text-slate-900 mb-1">
+                  {isLogin ? 'Bem-vindo de volta' : 'Criar conta'}
+                </h1>
+                <p className="text-slate-600 text-sm">
+                  {isLogin ? 'Entre para acessar o sistema' : 'Cadastre-se para começar'}
+                </p>
+              </div>
             </div>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-5">
               {!isLogin && (
-                <div>
-                  <Label>Nome completo</Label>
-                  <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="Seu nome" required={!isLogin} />
+                <div className="space-y-2">
+                  <Label htmlFor="displayName" className="text-sm font-medium text-slate-700">Nome completo</Label>
+                  <Input
+                    id="displayName"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    placeholder="Seu nome completo"
+                    required={!isLogin}
+                    className="border-slate-200 focus:border-teal-400 focus:ring-teal-400"
+                  />
                 </div>
               )}
-              <div className="relative">
-                <Label>Email</Label>
-                <AtSign className="pointer-events-none absolute left-3 top-[38px] h-4 w-4 text-slate-400" />
-                <Input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="email@exemplo.com"
-                  required
-                  className="pl-10"
-                />
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-medium text-slate-700">Email</Label>
+                <div className="relative">
+                  <AtSign className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="seu@email.com"
+                    required
+                    className="pl-10 h-11 border-slate-200 focus:border-slate-400 focus:ring-slate-400"
+                  />
+                </div>
               </div>
-              <div className="relative">
-                <Label>Senha</Label>
-                <Lock className="pointer-events-none absolute left-3 top-[38px] h-4 w-4 text-slate-400" />
-                <Input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Mínimo 6 caracteres"
-                  required
-                  minLength={6}
-                  className="pl-10"
-                />
-                <p className="mt-1 text-right text-[11px] text-slate-500">Use letras maiúsculas e números para mais segurança</p>
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-sm font-medium text-slate-700">Senha</Label>
+                <div className="relative">
+                  <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Mínimo 6 caracteres"
+                    required
+                    minLength={6}
+                    className="pl-10 h-11 border-slate-200 focus:border-teal-400 focus:ring-teal-400"
+                  />
+                </div>
               </div>
               <Button
                 type="submit"
@@ -90,7 +107,6 @@ export default function Auth() {
             </form>
           </CardContent>
         </Card>
-        <p className="text-center text-xs uppercase tracking-[0.45em] text-teal-700/40">2026 • Clínica Zayna</p>
       </div>
     </div>
   );

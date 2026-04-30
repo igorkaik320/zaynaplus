@@ -10,7 +10,7 @@ export interface Transaction {
   value: number;
   gaveta?: number | null;
   observation: string;
-  obra?: string | null;
+  empresa?: string | null;
   fornecedor?: string | null;
   nota_numero?: string | null;
   balance_before: number;

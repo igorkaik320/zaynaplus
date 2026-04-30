@@ -80,6 +80,7 @@ export function AppSidebar() {
     icon: Cog,
     items: [
       { title: 'Fornecedores', url: '/fornecedores', icon: Truck, module: 'fornecedores' },
+      { title: 'Empresas', url: '/empresas', icon: Building2, module: 'empresas' },
     ],
   });
 

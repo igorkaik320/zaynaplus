@@ -13,33 +13,13 @@ import type { ModuleKey } from "@/lib/modulePermissions";
 import { Lock } from "lucide-react";
 import { MaintenanceNotificationProvider } from "@/lib/maintenanceNotifications";
 
-// Lazy-loaded pages — reduces initial bundle dramatically
+// Lazy-loaded pages — apenas essenciais
 const Index = lazy(() => import("./pages/Index"));
 const Auth = lazy(() => import("./pages/Auth"));
-const AuditLog = lazy(() => import("./pages/AuditLog"));
 const UserManagement = lazy(() => import("./pages/UserManagement"));
-const ComprasAvistaPage = lazy(() => import("./pages/ComprasAvistaPage"));
-const ComprasFaturadasPage = lazy(() => import("./pages/ComprasFaturadasPage"));
-const EspelhoGeralPage = lazy(() => import("./pages/EspelhoGeralPage"));
-const ProgramacaoSemanalPage = lazy(() => import("./pages/ProgramacaoSemanalPage"));
-const EspelhoSemanalPage = lazy(() => import("./pages/EspelhoSemanalPage"));
-const ConfigRelatorioPage = lazy(() => import("./pages/ConfigRelatorioPage"));
 const FornecedoresPage = lazy(() => import("./pages/FornecedoresPage"));
-const ObrasPage = lazy(() => import("./pages/ObrasPage"));
-const ResponsaveisPage = lazy(() => import("./pages/ResponsaveisPage"));
-const VeiculosMaquinasPage = lazy(() => import("./pages/VeiculosMaquinasPage"));
-const EquipamentosPage = lazy(() => import("./pages/EquipamentosPage"));
-const SetoresPage = lazy(() => import("./pages/SetoresPage"));
-const PostosCombustivelPage = lazy(() => import("./pages/PostosCombustivelPage"));
-const TiposCombustivelPage = lazy(() => import("./pages/TiposCombustivelPage"));
-const AbastecimentosPage = lazy(() => import("./pages/AbastecimentosPage"));
-const DashboardCombustivelPage = lazy(() => import("./pages/DashboardCombustivelPage"));
-const RevisoesCombustivelPage = lazy(() => import("./pages/RevisoesCombustivelPage"));
 const EmpresasPage = lazy(() => import("./pages/EmpresasPage"));
-const FaturadosParcelasPage = lazy(() => import("./pages/FaturadosParcelasPage"));
 const ContasPagarPage = lazy(() => import("@/pages/ContasPagarPage"));
-const ServicosMaquinasPage = lazy(() => import("./pages/ServicosMaquinasPage"));
-const ComponentesMaquinasPage = lazy(() => import("./pages/ComponentesMaquinasPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient({
@@ -109,24 +89,11 @@ function HomeRoute() {
   if (userRole === "admin") return <Navigate to="/controle-caixa" replace />;
 
   const firstAccessibleRoute: Array<{ module: ModuleKey; path: string }> = [
-    { module: "compras_faturadas", path: "/compras/faturadas" },
-    { module: "compras_avista", path: "/compras/avista" },
-    { module: "espelho_geral", path: "/compras/espelho" },
-    { module: "programacao_semanal", path: "/compras/programacao-semanal" },
-    { module: "espelho_semanal", path: "/compras/espelho-semanal" },
-    { module: "combustivel_dashboard", path: "/combustivel/dashboard" },
-    { module: "abastecimentos", path: "/combustivel/abastecimentos" },
-    { module: "revisoes_combustivel", path: "/combustivel/revisoes" },
-    { module: "empresas", path: "/empresas" },
-    { module: "equipamentos", path: "/equipamentos" },
-    { module: "setores", path: "/setores" },
-    { module: "fornecedores", path: "/fornecedores" },
-    { module: "obras", path: "/obras" },
-    { module: "responsaveis", path: "/responsaveis" },
-    { module: "veiculos_maquinas", path: "/veiculos" },
-    { module: "postos_combustivel", path: "/postos-combustivel" },
-    { module: "tipos_combustivel", path: "/tipos-combustivel" },
     { module: "controle_caixa", path: "/controle-caixa" },
+    { module: "contas_pagar", path: "/contas-pagar" },
+    { module: "fornecedores", path: "/fornecedores" },
+    { module: "empresas", path: "/empresas" },
+    { module: "usuarios", path: "/usuarios" },
   ];
 
   const target = firstAccessibleRoute.find((entry) => canAccess(entry.module));
@@ -202,75 +169,9 @@ const App = () => (
                 <Route path="/" element={<HomeRoute />} />
                 <Route path="/contas-pagar" element={<ModuleRoute module="contas_pagar"><ContasPagarPage /></ModuleRoute>} />
                 <Route path="/controle-caixa" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-
-                <Route
-                  path="/compras/faturadas"
-                  element={<ModuleRoute module="compras_faturadas"><ComprasFaturadasPage /></ModuleRoute>}
-                />
-                <Route
-                  path="/compras/avista"
-                  element={<ModuleRoute module="compras_avista"><ComprasAvistaPage /></ModuleRoute>}
-                />
-                <Route
-                  path="/compras/espelho"
-                  element={<ModuleRoute module="espelho_geral"><EspelhoGeralPage /></ModuleRoute>}
-                />
-                <Route
-                  path="/compras/programacao-semanal"
-                  element={<ModuleRoute module="programacao_semanal"><ProgramacaoSemanalPage /></ModuleRoute>}
-                />
-                <Route
-                  path="/compras/espelho-semanal"
-                  element={<ModuleRoute module="espelho_semanal"><EspelhoSemanalPage /></ModuleRoute>}
-                />
-                <Route
-                  path="/financeiro/parcelas-faturadas"
-                  element={<ModuleRoute module="parcelas_faturadas"><FaturadosParcelasPage /></ModuleRoute>}
-                />
-
-                <Route path="/empresas" element={<ModuleRoute module="empresas"><EmpresasPage /></ModuleRoute>} />
                 <Route path="/fornecedores" element={<ModuleRoute module="fornecedores"><FornecedoresPage /></ModuleRoute>} />
-                <Route path="/obras" element={<ModuleRoute module="obras"><ObrasPage /></ModuleRoute>} />
-                <Route path="/responsaveis" element={<ModuleRoute module="responsaveis"><ResponsaveisPage /></ModuleRoute>} />
-                <Route path="/veiculos" element={<ModuleRoute module="veiculos_maquinas"><VeiculosMaquinasPage /></ModuleRoute>} />
-                <Route path="/equipamentos" element={<ModuleRoute module="equipamentos"><EquipamentosPage /></ModuleRoute>} />
-                <Route path="/setores" element={<ModuleRoute module="setores"><SetoresPage /></ModuleRoute>} />
-                <Route path="/servicos" element={<ModuleRoute module="servicos_maquinas"><ServicosMaquinasPage /></ModuleRoute>} />
-                <Route path="/componentes" element={<ModuleRoute module="componentes_maquinas"><ComponentesMaquinasPage /></ModuleRoute>} />
-                <Route
-                  path="/postos-combustivel"
-                  element={<ModuleRoute module="postos_combustivel"><PostosCombustivelPage /></ModuleRoute>}
-                />
-                <Route
-                  path="/tipos-combustivel"
-                  element={<ModuleRoute module="tipos_combustivel"><TiposCombustivelPage /></ModuleRoute>}
-                />
-
-                <Route
-                  path="/combustivel/abastecimentos"
-                  element={<ModuleRoute module="abastecimentos"><AbastecimentosPage /></ModuleRoute>}
-                />
-                <Route
-                  path="/combustivel/revisoes"
-                  element={<ModuleRoute module="revisoes_combustivel"><RevisoesCombustivelPage /></ModuleRoute>}
-                />
-                <Route
-                  path="/combustivel/dashboard"
-                  element={<ModuleRoute module="combustivel_dashboard"><DashboardCombustivelPage /></ModuleRoute>}
-                />
-                                <Route
-                  path="/servicos-maquinas"
-                  element={<ModuleRoute module="servicos_maquinas"><ServicosMaquinasPage /></ModuleRoute>}
-                />
-                <Route
-                  path="/componentes-maquinas"
-                  element={<ModuleRoute module="componentes_maquinas"><ComponentesMaquinasPage /></ModuleRoute>}
-                />
-
-                <Route path="/painel-executivo" element={<Navigate to="/controle-caixa" replace />} />
+                <Route path="/empresas" element={<ModuleRoute module="empresas"><EmpresasPage /></ModuleRoute>} />
                 <Route path="/usuarios" element={<AdminRoute><UserManagement /></AdminRoute>} />
-                <Route path="/auditoria" element={<AdminRoute><AuditLog /></AdminRoute>} />
-                <Route path="/config-relatorio" element={<AdminRoute><ConfigRelatorioPage /></AdminRoute>} />
 
                 <Route path="*" element={<NotFound />} />
                 </Routes>

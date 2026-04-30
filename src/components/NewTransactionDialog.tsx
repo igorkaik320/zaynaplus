@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { TransactionType } from '@/lib/cashRegister';
 import FornecedorSelect from '@/components/compras/FornecedorSelect';
-import ObraSelect from '@/components/compras/ObraSelect';
+import EmpresaSelect from '@/components/compras/EmpresaSelect';
 import type { Fornecedor } from '@/lib/comprasService';
 
 interface TxData {
@@ -15,7 +15,7 @@ interface TxData {
   value: number;
   gaveta?: number | null;
   observation: string;
-  obra?: string | null;
+  empresa?: string | null;
   fornecedor?: string | null;
   nota_numero?: string | null;
 }
@@ -33,7 +33,7 @@ export default function NewTransactionDialog({ open, onClose, onSubmit, editData
   const [value, setValue] = useState('');
   const [gaveta, setGaveta] = useState('');
   const [observation, setObservation] = useState('');
-  const [obra, setObra] = useState('');
+  const [empresa, setEmpresa] = useState('');
   const [fornecedor, setFornecedor] = useState('');
   const [notaNumero, setNotaNumero] = useState('');
 
@@ -44,7 +44,7 @@ export default function NewTransactionDialog({ open, onClose, onSubmit, editData
       setValue(editData.value?.toString() || '');
       setGaveta(editData.gaveta?.toString() || '');
       setObservation(editData.observation || '');
-      setObra(editData.obra || '');
+      setEmpresa(editData.empresa || '');
       setFornecedor(editData.fornecedor || '');
       setNotaNumero(editData.nota_numero || '');
     } else {
@@ -53,7 +53,7 @@ export default function NewTransactionDialog({ open, onClose, onSubmit, editData
       setValue('');
       setGaveta('');
       setObservation('');
-      setObra('');
+      setEmpresa('');
       setFornecedor('');
       setNotaNumero('');
     }
@@ -70,7 +70,7 @@ export default function NewTransactionDialog({ open, onClose, onSubmit, editData
       value: parseFloat(value),
       gaveta: gaveta ? parseFloat(gaveta) : undefined,
       observation: observation.trim(),
-      obra: obra?.trim() || null,
+      empresa: empresa?.trim() || null,
       fornecedor: fornecedor?.trim() || null,
       nota_numero: notaNumero?.trim() || null,
     });
@@ -152,10 +152,7 @@ export default function NewTransactionDialog({ open, onClose, onSubmit, editData
             />
           </div>
 
-          <div>
-            <Label>Obra / Centro de Custo</Label>
-            <ObraSelect value={obra || ''} onChange={setObra} />
-          </div>
+          <EmpresaSelect value={empresa || ''} onChange={setEmpresa} label="Empresa" />
 
           <div>
             <FornecedorSelect

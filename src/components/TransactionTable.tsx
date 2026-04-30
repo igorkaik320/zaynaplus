@@ -72,7 +72,7 @@ export default function TransactionTable({
               <TableHead className="text-right w-32">Saldo Final</TableHead>
               <TableHead className="text-right w-28">Gaveta</TableHead>
               <TableHead className="text-right w-28">Diferença</TableHead>
-              <TableHead>Obra</TableHead>
+              <TableHead>Empresa</TableHead>
               <TableHead>Fornecedor</TableHead>
               <TableHead>Nº Nota</TableHead>
               <TableHead>Observação</TableHead>
@@ -112,7 +112,7 @@ export default function TransactionTable({
                   >
                     {formatCurrency(t.difference)}
                   </TableCell>
-                  <TableCell className="text-sm">{t.obra || '—'}</TableCell>
+                  <TableCell className="text-sm">{t.empresa || '—'}</TableCell>
                   <TableCell className="text-sm">{t.fornecedor || '—'}</TableCell>
                   <TableCell className="text-sm">{t.nota_numero || '—'}</TableCell>
                   <TableCell className="text-sm max-w-[200px] truncate">{t.observation || '—'}</TableCell>

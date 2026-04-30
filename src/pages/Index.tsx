@@ -131,7 +131,7 @@ export default function Index() {
       value: number;
       gaveta?: number | null;
       observation: string;
-      obra?: string | null;
+      empresa?: string | null;
       fornecedor?: string | null;
       nota_numero?: string | null;
     }) => {
@@ -405,7 +405,7 @@ export default function Index() {
                 value: editingTx.value,
                 gaveta: editingTx.gaveta,
                 observation: editingTx.observation,
-                obra: editingTx.obra,
+                empresa: editingTx.empresa,
                 fornecedor: editingTx.fornecedor,
                 nota_numero: editingTx.nota_numero,
               }

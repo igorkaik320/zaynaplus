@@ -48,6 +48,7 @@ export interface Fornecedor {
   agencia: string | null;
   conta: string | null;
   cnpj_cpf: string | null;
+  celular: string | null;
   created_by: string;
   created_at: string;
   updated_by?: string | null;

@@ -10,7 +10,7 @@ interface Props {
   allowAll?: boolean;
 }
 
-export default function EmpresaSelect({ value, onChange, label = "Empresa", allowAll = false }: Props) {
+export default function EmpresaSelect({ value, onChange, label, allowAll = false }: Props) {
   const [empresas, setEmpresas] = useState<Empresa[]>([]);
 
   useEffect(() => {
