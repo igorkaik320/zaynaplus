@@ -265,10 +265,6 @@ export default function ContasPagarPage() {
     return map[status] || 'default';
   }
 
-  if (loading) {
-    return <div className="flex min-h-screen items-center justify-center"><p>Carregando...</p></div>;
-  }
-
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
@@ -362,7 +358,15 @@ export default function ContasPagarPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filtered.length === 0 && (
+            {loading && (
+              <TableRow>
+                <TableCell colSpan={11} className="py-10 text-center text-muted-foreground">
+                  Carregando contas a pagar...
+                </TableCell>
+              </TableRow>
+            )}
+
+            {!loading && filtered.length === 0 && (
               <TableRow>
                 <TableCell colSpan={11} className="text-center text-muted-foreground">
                   Nenhuma conta encontrada
