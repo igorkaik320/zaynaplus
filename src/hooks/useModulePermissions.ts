@@ -43,6 +43,13 @@ export function useModulePermissions() {
       return;
     }
 
+    if (userRole === 'admin') {
+      setPermissions({});
+      setActionPermissions([]);
+      setLoading(false);
+      return;
+    }
+
     fetchUserActionPermissions(userId)
       .then((perms) => {
         const map: Record<string, boolean> = {};
@@ -54,7 +61,7 @@ export function useModulePermissions() {
       })
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [userId]);
+  }, [userId, userRole]);
 
   const canAccess = useCallback(
     (module: ModuleKey) => hasModuleAccess(permissions, module, userRole || ''),
