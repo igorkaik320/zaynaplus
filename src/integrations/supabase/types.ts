@@ -14,120 +14,202 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_log: {
+        Row: {
+          acao: string | null
+          action: string | null
+          created_at: string | null
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          new_values: Json | null
+          old_values: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          acao?: string | null
+          action?: string | null
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          new_values?: Json | null
+          old_values?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          acao?: string | null
+          action?: string | null
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          new_values?: Json | null
+          old_values?: Json | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      cash_verifications: {
+        Row: {
+          created_at: string | null
+          created_by: string
+          date: string
+          difference: number
+          gaveta_value: number
+          id: string
+          observation: string | null
+          system_balance: number
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by: string
+          date?: string
+          difference?: number
+          gaveta_value: number
+          id?: string
+          observation?: string | null
+          system_balance: number
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string
+          date?: string
+          difference?: number
+          gaveta_value?: number
+          id?: string
+          observation?: string | null
+          system_balance?: number
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       contas_pagar: {
         Row: {
-          created_at: string
+          created_at: string | null
           created_by: string | null
           data_emissao: string
           data_primeiro_vencimento: string | null
           empresa_id: string | null
           empresa_nome: string | null
+          etapa_orcamento: string | null
           fornecedor_id: string | null
           fornecedor_nome: string | null
           id: string
-          numero: number
+          obra_id: string | null
+          obra_nome: string | null
           observacao: string | null
+          orcamento_item_id: string | null
           quantidade_parcelas: number
           status: string
-          updated_at: string
+          subetapa_orcamento: string | null
+          unidade_construtiva_id: string | null
+          updated_at: string | null
           updated_by: string | null
           valor_total: number
         }
         Insert: {
-          created_at?: string
+          created_at?: string | null
           created_by?: string | null
           data_emissao?: string
           data_primeiro_vencimento?: string | null
           empresa_id?: string | null
           empresa_nome?: string | null
+          etapa_orcamento?: string | null
           fornecedor_id?: string | null
           fornecedor_nome?: string | null
           id?: string
-          numero?: number
+          obra_id?: string | null
+          obra_nome?: string | null
           observacao?: string | null
+          orcamento_item_id?: string | null
           quantidade_parcelas?: number
           status?: string
-          updated_at?: string
+          subetapa_orcamento?: string | null
+          unidade_construtiva_id?: string | null
+          updated_at?: string | null
           updated_by?: string | null
-          valor_total?: number
+          valor_total: number
         }
         Update: {
-          created_at?: string
+          created_at?: string | null
           created_by?: string | null
           data_emissao?: string
           data_primeiro_vencimento?: string | null
           empresa_id?: string | null
           empresa_nome?: string | null
+          etapa_orcamento?: string | null
           fornecedor_id?: string | null
           fornecedor_nome?: string | null
           id?: string
-          numero?: number
+          obra_id?: string | null
+          obra_nome?: string | null
           observacao?: string | null
+          orcamento_item_id?: string | null
           quantidade_parcelas?: number
           status?: string
-          updated_at?: string
+          subetapa_orcamento?: string | null
+          unidade_construtiva_id?: string | null
+          updated_at?: string | null
           updated_by?: string | null
           valor_total?: number
         }
-        Relationships: [
-          {
-            foreignKeyName: "contas_pagar_empresa_id_fkey"
-            columns: ["empresa_id"]
-            isOneToOne: false
-            referencedRelation: "empresas"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       contas_pagar_parcelas: {
         Row: {
           conta_pagar_id: string
-          created_at: string
-          created_by: string | null
+          created_at: string | null
+          created_by: string
           data_pagamento: string | null
-          data_vencimento: string | null
+          data_vencimento: string
           id: string
           numero_parcela: number
           observacao: string | null
           status: string
-          updated_at: string
+          updated_at: string | null
           updated_by: string | null
           valor_pago: number | null
           valor_parcela: number
         }
         Insert: {
           conta_pagar_id: string
-          created_at?: string
-          created_by?: string | null
+          created_at?: string | null
+          created_by: string
           data_pagamento?: string | null
-          data_vencimento?: string | null
+          data_vencimento: string
           id?: string
-          numero_parcela?: number
+          numero_parcela: number
           observacao?: string | null
           status?: string
-          updated_at?: string
+          updated_at?: string | null
           updated_by?: string | null
           valor_pago?: number | null
-          valor_parcela?: number
+          valor_parcela: number
         }
         Update: {
           conta_pagar_id?: string
-          created_at?: string
-          created_by?: string | null
+          created_at?: string | null
+          created_by?: string
           data_pagamento?: string | null
-          data_vencimento?: string | null
+          data_vencimento?: string
           id?: string
           numero_parcela?: number
           observacao?: string | null
           status?: string
-          updated_at?: string
+          updated_at?: string | null
           updated_by?: string | null
           valor_pago?: number | null
           valor_parcela?: number
         }
         Relationships: [
           {
-            foreignKeyName: "contas_pagar_parcelas_conta_pagar_id_fkey"
+            foreignKeyName: "fk_contas_pagar_parcelas_conta"
             columns: ["conta_pagar_id"]
             isOneToOne: false
             referencedRelation: "contas_pagar"
@@ -139,35 +221,35 @@ export type Database = {
         Row: {
           cnpj: string | null
           cor_cabecalho: string | null
-          created_at: string
-          created_by: string | null
+          created_at: string | null
+          created_by: string
           id: string
           logo_direita: string | null
           logo_esquerda: string | null
           nome: string
-          updated_at: string
+          updated_at: string | null
         }
         Insert: {
           cnpj?: string | null
           cor_cabecalho?: string | null
-          created_at?: string
-          created_by?: string | null
+          created_at?: string | null
+          created_by: string
           id?: string
           logo_direita?: string | null
           logo_esquerda?: string | null
           nome: string
-          updated_at?: string
+          updated_at?: string | null
         }
         Update: {
           cnpj?: string | null
           cor_cabecalho?: string | null
-          created_at?: string
-          created_by?: string | null
+          created_at?: string | null
+          created_by?: string
           id?: string
           logo_direita?: string | null
           logo_esquerda?: string | null
           nome?: string
-          updated_at?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -219,6 +301,51 @@ export type Database = {
           observacao?: string | null
           tipo?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      fornecedores: {
+        Row: {
+          agencia: string | null
+          banco: string | null
+          celular: string | null
+          cnpj_cpf: string | null
+          conta: string | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          nome_fornecedor: string | null
+          razao_social: string | null
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          agencia?: string | null
+          banco?: string | null
+          celular?: string | null
+          cnpj_cpf?: string | null
+          conta?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          nome_fornecedor?: string | null
+          razao_social?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          agencia?: string | null
+          banco?: string | null
+          celular?: string | null
+          cnpj_cpf?: string | null
+          conta?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          nome_fornecedor?: string | null
+          razao_social?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
@@ -297,6 +424,105 @@ export type Database = {
         }
         Relationships: []
       }
+      transactions: {
+        Row: {
+          balance_after: number
+          balance_before: number
+          created_at: string | null
+          created_by: string
+          date: string
+          difference: number
+          fornecedor: string | null
+          gaveta: number | null
+          id: string
+          nota_numero: string | null
+          obra: string | null
+          observation: string | null
+          type: string
+          updated_at: string | null
+          updated_by: string | null
+          value: number
+        }
+        Insert: {
+          balance_after?: number
+          balance_before?: number
+          created_at?: string | null
+          created_by: string
+          date?: string
+          difference?: number
+          fornecedor?: string | null
+          gaveta?: number | null
+          id?: string
+          nota_numero?: string | null
+          obra?: string | null
+          observation?: string | null
+          type: string
+          updated_at?: string | null
+          updated_by?: string | null
+          value: number
+        }
+        Update: {
+          balance_after?: number
+          balance_before?: number
+          created_at?: string | null
+          created_by?: string
+          date?: string
+          difference?: number
+          fornecedor?: string | null
+          gaveta?: number | null
+          id?: string
+          nota_numero?: string | null
+          obra?: string | null
+          observation?: string | null
+          type?: string
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: number
+        }
+        Relationships: []
+      }
+      user_action_permissions: {
+        Row: {
+          can_create: boolean
+          can_delete: boolean
+          can_edit: boolean
+          can_export: boolean
+          can_view: boolean
+          created_at: string | null
+          granted_by: string | null
+          id: string
+          module: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          can_create?: boolean
+          can_delete?: boolean
+          can_edit?: boolean
+          can_export?: boolean
+          can_view?: boolean
+          created_at?: string | null
+          granted_by?: string | null
+          id?: string
+          module: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          can_create?: boolean
+          can_delete?: boolean
+          can_edit?: boolean
+          can_export?: boolean
+          can_view?: boolean
+          created_at?: string | null
+          granted_by?: string | null
+          id?: string
+          module?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -312,6 +538,45 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      verifications: {
+        Row: {
+          created_at: string | null
+          created_by: string
+          date: string
+          difference: number
+          gaveta_value: number
+          id: string
+          observation: string | null
+          system_balance: number
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by: string
+          date?: string
+          difference?: number
+          gaveta_value: number
+          id?: string
+          observation?: string | null
+          system_balance: number
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string
+          date?: string
+          difference?: number
+          gaveta_value?: number
+          id?: string
+          observation?: string | null
+          system_balance?: number
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }

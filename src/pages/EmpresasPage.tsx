@@ -136,10 +136,6 @@ export default function EmpresasPage() {
     input.click();
   }
 
-  if (loading) {
-    return <div className="flex min-h-screen items-center justify-center"><p>Carregando...</p></div>;
-  }
-
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
@@ -172,7 +168,14 @@ export default function EmpresasPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filtered.length === 0 && (
+            {loading && (
+              <TableRow>
+                <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
+                  Carregando empresas...
+                </TableCell>
+              </TableRow>
+            )}
+            {!loading && filtered.length === 0 && (
               <TableRow>
                 <TableCell colSpan={6} className="text-center text-muted-foreground">
                   Nenhuma empresa

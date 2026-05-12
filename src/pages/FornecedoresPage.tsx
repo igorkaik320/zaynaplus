@@ -95,8 +95,6 @@ export default function FornecedoresPage() {
     try { await deleteFornecedor(id, user?.id || ''); load(); toast.success('Excluído'); } catch (e: any) { toast.error(e.message); }
   }
 
-  if (loading) return <div className="flex min-h-screen items-center justify-center"><p>Carregando...</p></div>;
-
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
@@ -123,7 +121,10 @@ export default function FornecedoresPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filtered.length === 0 && (
+            {loading && (
+              <TableRow><TableCell colSpan={8} className="py-10 text-center text-muted-foreground">Carregando fornecedores...</TableCell></TableRow>
+            )}
+            {!loading && filtered.length === 0 && (
               <TableRow><TableCell colSpan={8} className="text-center text-muted-foreground">Nenhum fornecedor</TableCell></TableRow>
             )}
             {filtered.map(i => (

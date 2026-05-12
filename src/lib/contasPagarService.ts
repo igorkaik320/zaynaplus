@@ -9,6 +9,8 @@ export interface ContaPagar {
   data_primeiro_vencimento: string | null;
   empresa_id: string | null;
   empresa_nome: string | null;
+  obra_id?: string | null;
+  obra_nome?: string | null;
   fornecedor_id: string | null;
   fornecedor_nome: string | null;
   valor_total: number;
