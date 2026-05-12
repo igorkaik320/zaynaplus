@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Clock } from "lucide-react";
@@ -13,14 +13,13 @@ import type { ModuleKey } from "@/lib/modulePermissions";
 import { Lock } from "lucide-react";
 import { MaintenanceNotificationProvider } from "@/lib/maintenanceNotifications";
 
-// Lazy-loaded pages — apenas essenciais
-const Index = lazy(() => import("./pages/Index"));
-const Auth = lazy(() => import("./pages/Auth"));
-const UserManagement = lazy(() => import("./pages/UserManagement"));
-const FornecedoresPage = lazy(() => import("./pages/FornecedoresPage"));
-const EmpresasPage = lazy(() => import("./pages/EmpresasPage"));
-const ContasPagarPage = lazy(() => import("@/pages/ContasPagarPage"));
-const NotFound = lazy(() => import("./pages/NotFound"));
+import Index from "./pages/Index";
+import Auth from "./pages/Auth";
+import UserManagement from "./pages/UserManagement";
+import FornecedoresPage from "./pages/FornecedoresPage";
+import EmpresasPage from "./pages/EmpresasPage";
+import ContasPagarPage from "@/pages/ContasPagarPage";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -84,9 +83,8 @@ function HomeRoute() {
 
   if (!user && loading) return <LoadingScreen />;
   if (!user) return <Navigate to="/auth" />;
-  if (permLoading) return <LoadingScreen />;
-
   if (userRole === "admin") return <Navigate to="/controle-caixa" replace />;
+  if (permLoading) return <LoadingScreen />;
 
   const firstAccessibleRoute: Array<{ module: ModuleKey; path: string }> = [
     { module: "controle_caixa", path: "/controle-caixa" },
@@ -111,12 +109,13 @@ function HomeRoute() {
 }
 
 function ModuleRoute({ children, module }: { children: React.ReactNode; module: ModuleKey }) {
-  const { user, loading } = useAuth();
+  const { user, loading, userRole } = useAuth();
   const { canAccess, loading: permLoading } = useModulePermissions();
 
   if (!user && loading) return <LoadingScreen />;
-  if (permLoading) return <LoadingScreen />;
   if (!user) return <Navigate to="/auth" />;
+  if (userRole === "admin") return <AppLayout>{children}</AppLayout>;
+  if (permLoading) return <LoadingScreen />;
 
   if (!canAccess(module)) {
     return (
