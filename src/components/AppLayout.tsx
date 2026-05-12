@@ -6,9 +6,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-screen w-full">
       <AppSidebar />
       <div className="flex flex-1 flex-col min-w-0">
-        <header className="flex items-center justify-between border-b border-border/70 px-6 py-4">
-          <div className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-            GESTÃO ZAYNA
+        <header className="flex items-center justify-between border-b border-slate-200 bg-white px-6 py-4">
+          <div className="flex items-center gap-3 text-sm font-semibold uppercase tracking-wide text-slate-600">
+            <span className="h-5 w-1 rounded-full bg-[#d6007a]" />
+            GESTAO VIRTUOSA
           </div>
           <div className="flex items-center gap-2">
             <NotificationMenu />

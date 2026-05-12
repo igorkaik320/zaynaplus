@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { AtSign, Lock } from 'lucide-react';
-import { ZaynaLogo } from '@/components/ZaynaLogo';
+import { VirtuosaLogo } from '@/components/VirtuosaLogo';
 
 export default function Auth() {
   const { signIn, signUp } = useAuth();
@@ -32,12 +32,12 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-cyan-50 px-4 py-12">
+    <div className="min-h-screen bg-slate-50 px-4 py-12">
       <div className="mx-auto flex w-full max-w-4xl flex-col items-center justify-center gap-8">
-        <Card className="w-full max-w-md rounded-[28px] border border-teal-100 bg-white shadow-[0_25px_60px_rgba(20,184,166,0.18)]">
+        <Card className="w-full max-w-md rounded-[28px] border border-slate-200 bg-white shadow-[0_25px_60px_rgba(15,23,42,0.10)]">
           <CardHeader className="text-center pb-6">
             <div className="flex flex-col items-center gap-4">
-              <ZaynaLogo className="flex items-center justify-center" imgClassName="h-16 w-auto" />
+              <VirtuosaLogo className="flex items-center justify-center" imgClassName="h-20 w-auto max-w-[260px] object-contain" />
               <div>
                 <h1 className="text-2xl font-bold text-slate-900 mb-1">
                   {isLogin ? 'Bem-vindo de volta' : 'Criar conta'}
@@ -59,7 +59,7 @@ export default function Auth() {
                     onChange={(e) => setDisplayName(e.target.value)}
                     placeholder="Seu nome completo"
                     required={!isLogin}
-                    className="border-slate-200 focus:border-teal-400 focus:ring-teal-400"
+                    className="border-slate-200 focus:border-slate-400 focus:ring-slate-400"
                   />
                 </div>
               )}
@@ -90,13 +90,13 @@ export default function Auth() {
                     placeholder="Mínimo 6 caracteres"
                     required
                     minLength={6}
-                    className="pl-10 h-11 border-slate-200 focus:border-teal-400 focus:ring-teal-400"
+                    className="pl-10 h-11 border-slate-200 focus:border-slate-400 focus:ring-slate-400"
                   />
                 </div>
               </div>
               <Button
                 type="submit"
-                className="w-full rounded-2xl bg-teal-500 px-4 py-3 text-base font-semibold text-white shadow-[0_15px_30px_rgba(20,184,166,0.35)] transition hover:-translate-y-0.5 hover:bg-teal-600"
+                className="w-full rounded-2xl bg-slate-800 px-4 py-3 text-base font-semibold text-white shadow-[0_15px_30px_rgba(15,23,42,0.18)] transition hover:-translate-y-0.5 hover:bg-slate-700"
                 disabled={loading}
               >
                 {loading ? 'Aguarde...' : isLogin ? 'Entrar' : 'Cadastrar'}

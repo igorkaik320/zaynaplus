@@ -1,10 +1,10 @@
 import { supabase } from '@/integrations/supabase/client';
 
 export const MODULES = [
-  { key: 'controle_caixa', label: 'Controle de Caixa' },
   { key: 'contas_pagar', label: 'Contas a Pagar' },
   { key: 'fornecedores', label: 'Fornecedores' },
   { key: 'empresas', label: 'Empresas' },
+  { key: 'contas_bancarias', label: 'Contas Bancarias' },
   { key: 'usuarios', label: 'Usuarios' },
 ] as const;
 

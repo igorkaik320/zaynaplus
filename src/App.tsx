@@ -13,11 +13,11 @@ import type { ModuleKey } from "@/lib/modulePermissions";
 import { Lock } from "lucide-react";
 import { MaintenanceNotificationProvider } from "@/lib/maintenanceNotifications";
 
-import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import UserManagement from "./pages/UserManagement";
 import FornecedoresPage from "./pages/FornecedoresPage";
 import EmpresasPage from "./pages/EmpresasPage";
+import ContasBancariasPage from "./pages/ContasBancariasPage";
 import ContasPagarPage from "@/pages/ContasPagarPage";
 import NotFound from "./pages/NotFound";
 
@@ -85,14 +85,14 @@ function HomeRoute() {
 
   if (!user && loading) return <LoadingScreen />;
   if (!user) return <Navigate to="/auth" />;
-  if (userRole === "admin") return <Navigate to="/controle-caixa" replace />;
+  if (userRole === "admin") return <Navigate to="/contas-pagar" replace />;
   if (permLoading) return <LoadingScreen />;
 
   const firstAccessibleRoute: Array<{ module: ModuleKey; path: string }> = [
-    { module: "controle_caixa", path: "/controle-caixa" },
     { module: "contas_pagar", path: "/contas-pagar" },
     { module: "fornecedores", path: "/fornecedores" },
     { module: "empresas", path: "/empresas" },
+    { module: "contas_bancarias", path: "/contas-bancarias" },
     { module: "usuarios", path: "/usuarios" },
   ];
 
@@ -169,9 +169,9 @@ const App = () => (
                 <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
                 <Route path="/" element={<HomeRoute />} />
                 <Route path="/contas-pagar" element={<ModuleRoute module="contas_pagar"><ContasPagarPage /></ModuleRoute>} />
-                <Route path="/controle-caixa" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                 <Route path="/fornecedores" element={<ModuleRoute module="fornecedores"><FornecedoresPage /></ModuleRoute>} />
                 <Route path="/empresas" element={<ModuleRoute module="empresas"><EmpresasPage /></ModuleRoute>} />
+                <Route path="/contas-bancarias" element={<ModuleRoute module="contas_bancarias"><ContasBancariasPage /></ModuleRoute>} />
                 <Route path="/usuarios" element={<AdminRoute><UserManagement /></AdminRoute>} />
 
                 <Route path="*" element={<NotFound />} />
