@@ -69,7 +69,9 @@ export function AppSidebar() {
     label: 'Financeiro',
     icon: CircleDollarSign,
     items: [
+      { title: 'Controle de Caixa', url: '/controle-caixa', icon: Receipt, module: 'controle_caixa' },
       { title: 'Contas a Pagar', url: '/contas-pagar', icon: Package, module: 'contas_pagar' },
+      { title: 'Parcelas Faturadas', url: '/parcelas-faturadas', icon: FileBarChart, module: 'parcelas_faturadas' },
     ],
   });
 
