@@ -4,10 +4,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { fetchComprasFaturadas, formatCurrencyBR } from "@/lib/comprasService";
+import { formatCurrencyBR } from "@/lib/comprasService";
 import { fetchEmpresas, Empresa } from "@/lib/empresasService";
-import { fetchObras, Obra } from "@/lib/obrasService";
-import { buildInstallmentsFromItem, toIsoDateString } from "@/lib/parcelas";
 import { fetchContasPagar, ContaPagarComParcelas } from "@/lib/contasPagarService";
 import { verificarLimiteGlobal, AlertaSimples } from "@/lib/limitesSimples";
 import EmpresaSelect from "@/components/compras/EmpresaSelect";
@@ -20,7 +18,6 @@ const dayFormatter = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "
 
 type InstallmentView = {
   id: string;
-  tipo: 'compra_faturada' | 'conta_pagar';
   supplier: string;
   cnpj?: string | null;
   obra?: string | null;
@@ -62,7 +59,6 @@ export default function FaturadosParcelasPage() {
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
   const [selectedCompany, setSelectedCompany] = useState("");
   const [companies, setCompanies] = useState<Empresa[]>([]);
-  const [obras, setObras] = useState<Obra[]>([]);
   const [exportingPdf, setExportingPdf] = useState(false);
   const [alertas, setAlertas] = useState<AlertaSimples[]>([]);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -72,76 +68,15 @@ export default function FaturadosParcelasPage() {
     setLoading(true);
     (async () => {
       try {
-        const [comprasFaturadas, empresasData, obrasData, contasPagar] = await Promise.all([
-          fetchComprasFaturadas(),
+        const [empresasData, contasPagar] = await Promise.all([
           fetchEmpresas(),
-          fetchObras(),
           fetchContasPagar(),
         ]);
 
         setCompanies(empresasData);
-        setObras(obrasData);
 
-        // Criar mapa de empresa para obra
-        const obraToEmpresa = new Map<string, string>();
-        obrasData.forEach((obra) => {
-          obraToEmpresa.set(obra.nome, obra.empresa_id);
-        });
+        const installments: InstallmentView[] = [];
 
-        // Mapear empresas para fácil acesso
-        const empresaMap = new Map<string, Empresa>();
-        empresasData.forEach((empresa) => {
-          empresaMap.set(empresa.id, empresa);
-        });
-
-        // Processar compras faturadas (lógica existente)
-        const installments: InstallmentView[] = comprasFaturadas.flatMap((item) => {
-          const installments = buildInstallmentsFromItem(item);
-          return installments.map((installment, index) => {
-            const iso = toIsoDateString(installment.due);
-            const date = iso ? new Date(`${iso}T00:00:00`) : null;
-            const monthKey = date ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}` : 'sem-mes';
-            const monthLabel = date ? monthFormatter.format(date) : 'Sem mês';
-            const dayKey = iso || installment.due;
-            const dayLabel =
-              iso && !Number.isNaN(new Date(`${iso}T00:00:00`).getTime())
-                ? dayFormatter.format(new Date(`${iso}T00:00:00`))
-                : installment.due;
-
-            const obraId = (item as any).obra_id ?? (item as any).obraId ?? "";
-            const empresaId =
-              obraId && obraToEmpresa.has(obraId)
-                ? obraToEmpresa.get(obraId)!
-                : (item as any).empresa_id ?? (item as any).empresaId ?? "";
-            const companyName =
-              (empresaId && empresaMap.get(empresaId)?.nome) ||
-              (item as any).empresa ||
-              (item as any).empresa_nome ||
-              "";
-
-            return {
-              id: `compra-${item.id}-${index}-${installment.due}`,
-              tipo: 'compra_faturada' as const,
-              supplier: item.fornecedor,
-              cnpj: item.cnpj_cpf,
-              obra: item.obra,
-              pedido: item.pedido,
-              observation: item.observacao,
-              value: installment.value,
-              due: installment.due,
-              dueIso: iso,
-              monthKey,
-              monthLabel,
-              dayKey,
-              dayLabel,
-              obraId,
-              companyId: empresaId,
-              companyName: companyName || undefined,
-            };
-          });
-        });
-
-        // Processar contas a pagar
         contasPagar.forEach((conta) => {
           conta.parcelas.forEach((parcela) => {
             const date = new Date(`${parcela.data_vencimento}T00:00:00`);
@@ -154,7 +89,6 @@ export default function FaturadosParcelasPage() {
             if (parcela.status !== 'paga' && parcela.status !== 'cancelada') {
               installments.push({
                 id: `conta-${conta.id}-${parcela.id}`,
-                tipo: 'conta_pagar' as const,
                 supplier: conta.fornecedor_nome || 'Fornecedor não informado',
                 cnpj: null,
                 obra: conta.obra_nome || '---',
@@ -193,12 +127,8 @@ export default function FaturadosParcelasPage() {
   }, []);
 
   const allowedObrasForCompany = useMemo(() => {
-    if (!selectedCompany) return null;
-    const names = obras
-      .filter((obra) => obra.empresa_id === selectedCompany)
-      .map((obra) => obra.nome.toLowerCase());
-    return new Set(names);
-  }, [obras, selectedCompany]);
+    return null as Set<string> | null;
+  }, [selectedCompany]);
 
   const visibleInstallments = useMemo(() => {
     if (!selectedCompany) return items;
@@ -487,7 +417,12 @@ export default function FaturadosParcelasPage() {
             </p>
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
+            {monthDetails && (
+              <p className="self-end pb-2 text-sm font-semibold text-blue-600">
+                {formatCurrencyBR(monthDetails.total)}
+              </p>
+            )}
             <div className="w-full sm:w-64">
               <EmpresaSelect
                 value={selectedCompany}
@@ -497,14 +432,8 @@ export default function FaturadosParcelasPage() {
               />
             </div>
 
-            {monthDetails && (
-              <p className="text-sm font-semibold text-blue-600 sm:order-0">{formatCurrencyBR(monthDetails.total)}</p>
-            )}
-
-            <ConfigurarLimiteModal 
-              onLimiteCriado={() => setRefreshKey(prev => prev + 1)}
-            >
-              <Button variant="outline" size="sm" className="w-full sm:w-auto">
+            <ConfigurarLimiteModal onLimiteCriado={() => setRefreshKey((prev) => prev + 1)}>
+              <Button variant="outline" size="sm" className="h-10 w-full sm:w-auto">
                 <Settings className="h-4 w-4 mr-2" />
                 Configurar Limite
               </Button>
@@ -514,7 +443,7 @@ export default function FaturadosParcelasPage() {
               type="button"
               onClick={handleExportPdf}
               disabled={exportingPdf || dailyGroups.length === 0}
-              className="w-full sm:w-auto"
+              className="h-10 w-full sm:w-auto"
               variant="outline"
             >
               {exportingPdf ? "Exportando..." : "Exportar PDF"}
@@ -547,7 +476,6 @@ export default function FaturadosParcelasPage() {
                   <TableHeader>
                     <TableRow>
                       <TableHead>Vencimento</TableHead>
-                      <TableHead>Tipo</TableHead>
                       <TableHead>Fornecedor</TableHead>
                       <TableHead>Obra</TableHead>
                       <TableHead>Pedido</TableHead>
@@ -558,7 +486,7 @@ export default function FaturadosParcelasPage() {
                   <TableBody>
                     {dailyGroups.map((day) => [
                       <TableRow key={day.key}>
-                        <TableCell colSpan={7}>
+                        <TableCell colSpan={6}>
                           <div className="flex justify-between items-center">
                             <div>
                               <p className="text-sm font-semibold">{day.label}</p>
@@ -580,28 +508,6 @@ export default function FaturadosParcelasPage() {
                             {installment.dueIso 
                               ? new Date(installment.dueIso + 'T00:00:00').toLocaleDateString('pt-BR')
                               : installment.due}
-                          </TableCell>
-                          <TableCell className="align-middle">
-                            <span
-                              className={`px-3 rounded text-xs font-medium ${
-                                installment.tipo === 'conta_pagar'
-                                  ? 'bg-orange-100 text-orange-800'
-                                  : 'bg-blue-100 text-blue-800'
-                              }`}
-                              style={{
-                                display: 'inline-block',
-                                height: '22px',
-                                lineHeight: '22px',
-                                textAlign: 'center',
-                                whiteSpace: 'nowrap',
-                                paddingLeft: '10px',
-                                paddingRight: '10px'
-                              }}
-                            >
-                              {installment.tipo === 'conta_pagar'
-                                ? 'Conta a Pagar'
-                                : 'Compra Faturada'}
-                            </span>
                           </TableCell>
                           <TableCell>
                             <div className="font-medium">{installment.supplier}</div>
