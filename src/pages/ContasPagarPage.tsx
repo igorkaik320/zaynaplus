@@ -1031,7 +1031,7 @@ export default function ContasPagarPage() {
             )}
 
             <div>
-              <Label>ObservaÃ§Ã£o</Label>
+              <Label>Observação</Label>
               <Input
                 value={form.observacao}
                 onChange={(e) => setForm((p) => ({ ...p, observacao: e.target.value }))}
