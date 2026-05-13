@@ -1,37 +1,50 @@
-﻿import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Plus, Pencil, Trash2, Eye, Calendar as CalendarIcon, Building, CheckSquare, FileText, Search, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
-import { useAuth } from '@/lib/auth';
-import { useModulePermissions } from '@/hooks/useModulePermissions';
-import { toast } from 'sonner';
-import { formatCurrency, formatCurrencyInput, formatCurrencyReal, parseCurrencyInput } from '@/lib/formatters';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-import { 
-  fetchContasPagar, 
-  saveContaPagar, 
-  updateContaPagar, 
+﻿import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  Eye,
+  Calendar as CalendarIcon,
+  Building,
+  CheckSquare,
+  FileText,
+  Search,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+} from "lucide-react";
+import { useAuth } from "@/lib/auth";
+import { useModulePermissions } from "@/hooks/useModulePermissions";
+import { toast } from "sonner";
+import { formatCurrency, formatCurrencyInput, formatCurrencyReal, parseCurrencyInput } from "@/lib/formatters";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import {
+  fetchContasPagar,
+  saveContaPagar,
+  updateContaPagar,
   deleteContaPagar,
   saveParcelas,
   gerarParcelas,
   updateParcelasStatus,
   ContaPagarComParcelas,
-  ContaPagarParcela
-} from '@/lib/contasPagarService';
-import { fetchEmpresas } from '@/lib/empresasService';
-import { fetchFornecedores, Fornecedor } from '@/lib/comprasService';
-import ContasPagarParcelasDialog from '@/components/ContasPagarParcelasDialog';
-import FornecedorSelect from '@/components/compras/FornecedorSelect';
-import EmpresaSelect from '@/components/compras/EmpresaSelect';
+  ContaPagarParcela,
+} from "@/lib/contasPagarService";
+import { fetchEmpresas } from "@/lib/empresasService";
+import { fetchFornecedores, Fornecedor } from "@/lib/comprasService";
+import ContasPagarParcelasDialog from "@/components/ContasPagarParcelasDialog";
+import FornecedorSelect from "@/components/compras/FornecedorSelect";
+import EmpresaSelect from "@/components/compras/EmpresaSelect";
 
 interface Empresa {
   id: string;
@@ -55,31 +68,40 @@ export default function ContasPagarPage() {
   const [exportingPdf, setExportingPdf] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
 
-  type SortKey = 'numero' | 'data_emissao' | 'empresa' | 'fornecedor' | 'valor_total' | 'parcela' | 'vencimento' | 'status' | 'observacao';
-  type SortDir = 'asc' | 'desc';
+  type SortKey =
+    | "numero"
+    | "data_emissao"
+    | "empresa"
+    | "fornecedor"
+    | "valor_total"
+    | "parcela"
+    | "vencimento"
+    | "status"
+    | "observacao";
+  type SortDir = "asc" | "desc";
   const [sortKey, setSortKey] = useState<SortKey | null>(null);
-  const [sortDir, setSortDir] = useState<SortDir>('asc');
-  
+  const [sortDir, setSortDir] = useState<SortDir>("asc");
+
   // Filtros
-  const [filterEmpresa, setFilterEmpresa] = useState('');
-  const [filterFornecedor, setFilterFornecedor] = useState('');
+  const [filterEmpresa, setFilterEmpresa] = useState("");
+  const [filterFornecedor, setFilterFornecedor] = useState("");
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [endDate, setEndDate] = useState<Date | undefined>();
   const [filtrosAplicados, setFiltrosAplicados] = useState({
-    empresa: '',
-    fornecedor: '',
+    empresa: "",
+    fornecedor: "",
     startDate: undefined as Date | undefined,
     endDate: undefined as Date | undefined,
   });
 
   const [form, setForm] = useState({
-    data_emissao: new Date().toISOString().split('T')[0],
-    data_primeiro_vencimento: new Date().toISOString().split('T')[0],
-    empresa_id: '',
-    fornecedor_id: '',
-    valor_total: '',
-    quantidade_parcelas: '1',
-    observacao: '',
+    data_emissao: new Date().toISOString().split("T")[0],
+    data_primeiro_vencimento: new Date().toISOString().split("T")[0],
+    empresa_id: "",
+    fornecedor_id: "",
+    valor_total: "",
+    quantidade_parcelas: "1",
+    observacao: "",
   });
 
   const load = useCallback(async () => {
@@ -93,17 +115,24 @@ export default function ContasPagarPage() {
       setEmpresas(empresasData);
       setFornecedores(fornecedoresData);
     } catch (e: any) {
-      toast.error('Erro ao carregar dados: ' + e.message);
+      toast.error("Erro ao carregar dados: " + e.message);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+  }, [load]);
 
-  
   const filtered = items.filter((i) => {
-    if (!filtrosAplicados.empresa && !filtrosAplicados.fornecedor && !filtrosAplicados.startDate && !filtrosAplicados.endDate) return true;
+    if (
+      !filtrosAplicados.empresa &&
+      !filtrosAplicados.fornecedor &&
+      !filtrosAplicados.startDate &&
+      !filtrosAplicados.endDate
+    )
+      return true;
     if (filtrosAplicados.empresa && i.empresa_id !== filtrosAplicados.empresa) return false;
     if (filtrosAplicados.fornecedor && i.fornecedor_id !== filtrosAplicados.fornecedor) return false;
     if (filtrosAplicados.startDate || filtrosAplicados.endDate) {
@@ -122,65 +151,63 @@ export default function ContasPagarPage() {
   function handleSort(key: SortKey) {
     if (sortKey !== key) {
       setSortKey(key);
-      setSortDir('asc');
-    } else if (sortDir === 'asc') {
-      setSortDir('desc');
+      setSortDir("asc");
+    } else if (sortDir === "asc") {
+      setSortDir("desc");
     } else {
       setSortKey(null);
-      setSortDir('asc');
+      setSortDir("asc");
     }
   }
 
   function SortIcon({ column }: { column: SortKey }) {
     if (sortKey !== column) return <ArrowUpDown className="ml-1 h-3 w-3 opacity-40" />;
-    return sortDir === 'asc' ? <ArrowUp className="ml-1 h-3 w-3" /> : <ArrowDown className="ml-1 h-3 w-3" />;
+    return sortDir === "asc" ? <ArrowUp className="ml-1 h-3 w-3" /> : <ArrowDown className="ml-1 h-3 w-3" />;
   }
 
   const sortedFiltered = (() => {
     if (!sortKey) return filtered;
     const arr = [...filtered];
-    const dir = sortDir === 'asc' ? 1 : -1;
-    const collator = new Intl.Collator('pt-BR', { sensitivity: 'base', numeric: true });
+    const dir = sortDir === "asc" ? 1 : -1;
+    const collator = new Intl.Collator("pt-BR", { sensitivity: "base", numeric: true });
 
     const getVal = (conta: ContaPagarComParcelas): string | number => {
       const primeira = [...conta.parcelas].sort((a, b) => a.numero_parcela - b.numero_parcela)[0];
       switch (sortKey) {
-        case 'numero':
+        case "numero":
           return conta.numero ?? conta.id.slice(-6);
-        case 'data_emissao':
-          return conta.data_emissao || '';
-        case 'empresa':
-          return (conta.empresa_nome || '').toLowerCase();
-        case 'fornecedor':
-          return (conta.fornecedor_nome || '').toLowerCase();
-        case 'valor_total':
+        case "data_emissao":
+          return conta.data_emissao || "";
+        case "empresa":
+          return (conta.empresa_nome || "").toLowerCase();
+        case "fornecedor":
+          return (conta.fornecedor_nome || "").toLowerCase();
+        case "valor_total":
           return Number(conta.valor_total) || 0;
-        case 'parcela':
+        case "parcela":
           return conta.quantidade_parcelas || 0;
-        case 'vencimento':
-          return primeira?.data_vencimento || '';
-        case 'status':
-          return (primeira?.status || '').toLowerCase();
-        case 'observacao':
-          return ((primeira?.observacao || conta.observacao) || '').toLowerCase();
+        case "vencimento":
+          return primeira?.data_vencimento || "";
+        case "status":
+          return (primeira?.status || "").toLowerCase();
+        case "observacao":
+          return (primeira?.observacao || conta.observacao || "").toLowerCase();
         default:
-          return '';
+          return "";
       }
     };
 
     arr.sort((a, b) => {
       const va = getVal(a);
       const vb = getVal(b);
-      if (typeof va === 'number' && typeof vb === 'number') return (va - vb) * dir;
+      if (typeof va === "number" && typeof vb === "number") return (va - vb) * dir;
       return collator.compare(String(va), String(vb)) * dir;
     });
     return arr;
   })();
 
   // Flatten all parcelas for inline display
-  const allParcelas = sortedFiltered.flatMap(conta => 
-    conta.parcelas.map(p => ({ ...p, conta }))
-  );
+  const allParcelas = sortedFiltered.flatMap((conta) => conta.parcelas.map((p) => ({ ...p, conta })));
 
   function handleConsultar() {
     setFiltrosAplicados({
@@ -194,13 +221,13 @@ export default function ContasPagarPage() {
   function openNew() {
     setEditingId(null);
     setForm({
-      data_emissao: new Date().toISOString().split('T')[0],
-      data_primeiro_vencimento: new Date().toISOString().split('T')[0],
-      empresa_id: '',
-      fornecedor_id: '',
-      valor_total: '',
-      quantidade_parcelas: '1',
-      observacao: '',
+      data_emissao: new Date().toISOString().split("T")[0],
+      data_primeiro_vencimento: new Date().toISOString().split("T")[0],
+      empresa_id: "",
+      fornecedor_id: "",
+      valor_total: "",
+      quantidade_parcelas: "1",
+      observacao: "",
     });
     setShowDialog(true);
   }
@@ -210,11 +237,11 @@ export default function ContasPagarPage() {
     setForm({
       data_emissao: item.data_emissao,
       data_primeiro_vencimento: item.data_primeiro_vencimento || item.data_emissao,
-      empresa_id: item.empresa_id || '',
-      fornecedor_id: item.fornecedor_id || '',
+      empresa_id: item.empresa_id || "",
+      fornecedor_id: item.fornecedor_id || "",
       valor_total: formatCurrencyInput(formatCurrencyReal(item.valor_total)),
       quantidade_parcelas: item.quantidade_parcelas.toString(),
-      observacao: item.observacao || '',
+      observacao: item.observacao || "",
     });
     setShowDialog(true);
   }
@@ -234,44 +261,44 @@ export default function ContasPagarPage() {
 
   async function handleSubmit() {
     if (!user || !form.valor_total || !form.empresa_id || !form.fornecedor_id) {
-      toast.error('Preencha todos os campos obrigatÃ³rios');
+      toast.error("Preencha todos os campos obrigatÃ³rios");
       return;
     }
 
     try {
-      const empresa = empresas.find(e => e.id === form.empresa_id);
-      const fornecedor = fornecedores.find(f => f.id === form.fornecedor_id);
-      
+      const empresa = empresas.find((e) => e.id === form.empresa_id);
+      const fornecedor = fornecedores.find((f) => f.id === form.fornecedor_id);
+
       const payload = {
         data_emissao: form.data_emissao,
         data_primeiro_vencimento: form.data_primeiro_vencimento || null,
         empresa_id: form.empresa_id,
-        empresa_nome: empresa?.nome || '',
+        empresa_nome: empresa?.nome || "",
         fornecedor_id: form.fornecedor_id,
-        fornecedor_nome: fornecedor?.nome_fornecedor || '',
+        fornecedor_nome: fornecedor?.nome_fornecedor || "",
         valor_total: parseCurrencyInput(form.valor_total),
         quantidade_parcelas: parseInt(form.quantidade_parcelas),
         observacao: form.observacao.trim() || null,
-        status: 'aberto' as const,
+        status: "aberto" as const,
         created_by: user.id,
       };
 
       if (editingId) {
         await updateContaPagar(editingId, payload, user.id);
-        toast.success('Conta atualizada');
+        toast.success("Conta atualizada");
       } else {
         const savedConta = await saveContaPagar(payload, user.id);
-        
+
         const parcelas = gerarParcelas(
           savedConta.id,
           payload.valor_total,
           payload.quantidade_parcelas,
           form.data_primeiro_vencimento || form.data_emissao,
-          user.id
+          user.id,
         );
         await saveParcelas(parcelas, user.id);
-        
-        toast.success('Conta cadastrada com parcelas geradas');
+
+        toast.success("Conta cadastrada com parcelas geradas");
       }
 
       setShowDialog(false);
@@ -282,10 +309,10 @@ export default function ContasPagarPage() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm('Excluir esta conta e todas as parcelas?')) return;
+    if (!confirm("Excluir esta conta e todas as parcelas?")) return;
     try {
-      await deleteContaPagar(id, user?.id || '');
-      toast.success('Conta excluÃ­da');
+      await deleteContaPagar(id, user?.id || "");
+      toast.success("Conta excluÃ­da");
       load();
     } catch (e: any) {
       toast.error(e.message);
@@ -294,7 +321,7 @@ export default function ContasPagarPage() {
 
   // Toggle parcela selection
   function toggleParcela(parcelaId: string) {
-    setSelectedParcelas(prev => {
+    setSelectedParcelas((prev) => {
       const next = new Set(prev);
       if (next.has(parcelaId)) next.delete(parcelaId);
       else next.add(parcelaId);
@@ -306,7 +333,7 @@ export default function ContasPagarPage() {
   async function handleBulkStatusChange(newStatus: string) {
     if (selectedParcelas.size === 0) return;
     try {
-      await updateParcelasStatus(Array.from(selectedParcelas), newStatus, user?.id || '');
+      await updateParcelasStatus(Array.from(selectedParcelas), newStatus, user?.id || "");
       toast.success(`${selectedParcelas.size} parcela(s) atualizada(s) para "${newStatus}"`);
       setSelectedParcelas(new Set());
       setShowBulkStatus(false);
@@ -319,8 +346,8 @@ export default function ContasPagarPage() {
   // Inline single parcela status change
   async function handleInlineStatusChange(parcelaId: string, newStatus: string) {
     try {
-      await updateParcelasStatus([parcelaId], newStatus, user?.id || '');
-      toast.success('Status atualizado');
+      await updateParcelasStatus([parcelaId], newStatus, user?.id || "");
+      toast.success("Status atualizado");
       load();
     } catch (e: any) {
       toast.error(e.message);
@@ -328,27 +355,36 @@ export default function ContasPagarPage() {
   }
 
   function getStatusBadge(status: string) {
-    const variants: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
-      aberto: { label: 'Aberto', variant: 'default' },
-      pago: { label: 'Pago', variant: 'secondary' },
-      cancelado: { label: 'Cancelado', variant: 'destructive' },
+    const variants: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
+      aberto: { label: "Aberto", variant: "default" },
+      pago: { label: "Pago", variant: "secondary" },
+      cancelado: { label: "Cancelado", variant: "destructive" },
     };
-    const config = variants[status] || { label: status, variant: 'default' };
+    const config = variants[status] || { label: status, variant: "default" };
     return <Badge variant={config.variant}>{config.label}</Badge>;
   }
 
-  function getParcelaStatusVariant(status: string): 'default' | 'secondary' | 'destructive' | 'outline' {
-    const map: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-      aberta: 'default',
-      paga: 'secondary',
-      vencida: 'destructive',
-      cancelada: 'outline',
+  function getParcelaStatusVariant(status: string): "default" | "secondary" | "destructive" | "outline" {
+    const map: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
+      aberta: "default",
+      paga: "secondary",
+      vencida: "destructive",
+      cancelada: "outline",
     };
-    return map[status] || 'default';
+    return map[status] || "default";
   }
 
   const reportGroups = useMemo(() => {
-    const groups: Record<string, { date: string; dateLabel: string; parcels: number; total: number; items: Array<ContaPagarParcela & { conta: ContaPagarComParcelas }> }> = {};
+    const groups: Record<
+      string,
+      {
+        date: string;
+        dateLabel: string;
+        parcels: number;
+        total: number;
+        items: Array<ContaPagarParcela & { conta: ContaPagarComParcelas }>;
+      }
+    > = {};
 
     filtered.forEach((conta) => {
       conta.parcelas.forEach((parcela) => {
@@ -365,11 +401,11 @@ export default function ContasPagarPage() {
           const dateObj = new Date(`${date}T00:00:00`);
           groups[date] = {
             date,
-            dateLabel: dateObj.toLocaleDateString('pt-BR', {
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
+            dateLabel: dateObj.toLocaleDateString("pt-BR", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
             }),
             parcels: 0,
             total: 0,
@@ -397,15 +433,15 @@ export default function ContasPagarPage() {
   async function handleExportPdf() {
     if (exportingPdf) return;
     if (reportGroups.length === 0) {
-      toast.error('Nada para exportar.');
+      toast.error("Nada para exportar.");
       return;
     }
 
     setExportingPdf(true);
     try {
-      const { default: jsPDF } = await import('jspdf');
+      const { default: jsPDF } = await import("jspdf");
 
-      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdf = new jsPDF("p", "mm", "a4");
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
       const marginLeft = 14;
@@ -422,18 +458,18 @@ export default function ContasPagarPage() {
 
       pdf.setFontSize(8);
       pdf.setTextColor(120, 120, 120);
-      pdf.text('RELATORIO', marginLeft, y);
+      pdf.text("RELATORIO", marginLeft, y);
       y += 5;
 
       pdf.setFontSize(14);
       pdf.setTextColor(30, 30, 30);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Contas a Pagar', marginLeft, y);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Contas a Pagar", marginLeft, y);
 
       pdf.setFontSize(8);
       pdf.setTextColor(120, 120, 120);
-      pdf.setFont('helvetica', 'normal');
-      pdf.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')}`, marginRight, y, { align: 'right' });
+      pdf.setFont("helvetica", "normal");
+      pdf.text(`Gerado em: ${new Date().toLocaleDateString("pt-BR")}`, marginRight, y, { align: "right" });
       y += 3;
 
       pdf.setDrawColor(200, 200, 200);
@@ -452,17 +488,17 @@ export default function ContasPagarPage() {
 
       const drawTableHeader = () => {
         pdf.setFillColor(245, 245, 245);
-        pdf.rect(marginLeft, y - 4, usableWidth, 7, 'F');
+        pdf.rect(marginLeft, y - 4, usableWidth, 7, "F");
         pdf.setFontSize(7.5);
-        pdf.setFont('helvetica', 'bold');
+        pdf.setFont("helvetica", "bold");
         pdf.setTextColor(80, 80, 80);
-        pdf.text('Vencimento', cols.venc.x, y);
-        pdf.text('Empresa', cols.empresa.x, y);
-        pdf.text('Fornecedor', cols.fornec.x, y);
-        pdf.text('Conta', cols.conta.x, y);
-        pdf.text('Parcela', cols.parcela.x, y, { align: 'center' });
-        pdf.text('Valor', cols.valor.x + cols.valor.w, y, { align: 'right' });
-        pdf.text('Status', cols.status.x, y);
+        pdf.text("Vencimento", cols.venc.x, y);
+        pdf.text("Empresa", cols.empresa.x, y);
+        pdf.text("Fornecedor", cols.fornec.x, y);
+        pdf.text("Conta", cols.conta.x, y);
+        pdf.text("Parcela", cols.parcela.x, y, { align: "center" });
+        pdf.text("Valor", cols.valor.x + cols.valor.w, y, { align: "right" });
+        pdf.text("Status", cols.status.x, y);
         pdf.setDrawColor(210, 210, 210);
         pdf.line(marginLeft, y + 2, marginRight, y + 2);
         y += 6;
@@ -473,53 +509,53 @@ export default function ContasPagarPage() {
       reportGroups.forEach((group) => {
         checkNewPage(14);
         pdf.setFillColor(248, 249, 250);
-        pdf.rect(marginLeft, y - 3.5, usableWidth, 10, 'F');
+        pdf.rect(marginLeft, y - 3.5, usableWidth, 10, "F");
 
         const dateObj = new Date(`${group.date}T00:00:00`);
-        const dateLabel = dateObj.toLocaleDateString('pt-BR', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
+        const dateLabel = dateObj.toLocaleDateString("pt-BR", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
         });
 
         pdf.setFontSize(8.5);
-        pdf.setFont('helvetica', 'bold');
+        pdf.setFont("helvetica", "bold");
         pdf.setTextColor(30, 30, 30);
         pdf.text(dateLabel, marginLeft + 1, y + 2);
 
         pdf.setFontSize(7);
-        pdf.setFont('helvetica', 'normal');
+        pdf.setFont("helvetica", "normal");
         pdf.setTextColor(100, 100, 100);
-        pdf.text(`${group.parcels} parcela${group.parcels === 1 ? '' : 's'}`, marginLeft + 1, y + 6);
+        pdf.text(`${group.parcels} parcela${group.parcels === 1 ? "" : "s"}`, marginLeft + 1, y + 6);
 
         pdf.setFontSize(9);
-        pdf.setFont('helvetica', 'bold');
+        pdf.setFont("helvetica", "bold");
         pdf.setTextColor(30, 30, 30);
-        pdf.text(formatCurrency(group.total), marginRight, y + 3, { align: 'right' });
+        pdf.text(formatCurrency(group.total), marginRight, y + 3, { align: "right" });
         y += 13;
 
         group.items.forEach((item, idx) => {
           checkNewPage(7);
           pdf.setFillColor(idx % 2 === 0 ? 255 : 252, idx % 2 === 0 ? 255 : 252, idx % 2 === 0 ? 255 : 252);
-          pdf.rect(marginLeft, y - 3.5, usableWidth, 6.5, 'F');
+          pdf.rect(marginLeft, y - 3.5, usableWidth, 6.5, "F");
           pdf.setFontSize(7.5);
-          pdf.setFont('helvetica', 'normal');
+          pdf.setFont("helvetica", "normal");
           pdf.setTextColor(50, 50, 50);
 
-          const vencText = new Date(`${item.data_vencimento}T00:00:00`).toLocaleDateString('pt-BR');
-          const empresaNome = (item.conta.empresa_nome || '-').substring(0, 14);
-          const fornecNome = (item.conta.fornecedor_nome || '-').substring(0, 26);
+          const vencText = new Date(`${item.data_vencimento}T00:00:00`).toLocaleDateString("pt-BR");
+          const empresaNome = (item.conta.empresa_nome || "-").substring(0, 14);
+          const fornecNome = (item.conta.fornecedor_nome || "-").substring(0, 26);
           const contaId = `#${item.conta.id.slice(-6).toUpperCase()}`;
           const parcelaText = `${item.numero_parcela}/${item.conta.quantidade_parcelas}`;
           const valorText = formatCurrency(item.valor_parcela);
-          const statusText = item.status || '-';
+          const statusText = item.status || "-";
 
           pdf.text(vencText, cols.venc.x, y);
           pdf.text(empresaNome, cols.empresa.x, y);
           pdf.text(fornecNome, cols.fornec.x, y);
           pdf.text(contaId, cols.conta.x, y);
-          pdf.text(parcelaText, cols.parcela.x + cols.parcela.w / 2, y, { align: 'center' });
-          pdf.text(valorText, cols.valor.x + cols.valor.w, y, { align: 'right' });
+          pdf.text(parcelaText, cols.parcela.x + cols.parcela.w / 2, y, { align: "center" });
+          pdf.text(valorText, cols.valor.x + cols.valor.w, y, { align: "right" });
 
           const statusColors: Record<string, [number, number, number]> = {
             aberta: [220, 237, 255],
@@ -539,10 +575,10 @@ export default function ContasPagarPage() {
           const badgeW = 18;
           const badgeH = 4.5;
           pdf.setFillColor(br, bg, bb);
-          pdf.roundedRect(cols.status.x, y - 3.2, badgeW, badgeH, 1, 1, 'F');
+          pdf.roundedRect(cols.status.x, y - 3.2, badgeW, badgeH, 1, 1, "F");
           pdf.setTextColor(tr, tg, tb);
           pdf.setFontSize(6.5);
-          pdf.text(statusText, cols.status.x + badgeW / 2, y - 0.7, { align: 'center' });
+          pdf.text(statusText, cols.status.x + badgeW / 2, y - 0.7, { align: "center" });
 
           pdf.setDrawColor(240, 240, 240);
           pdf.line(marginLeft, y + 2.5, marginRight, y + 2.5);
@@ -559,14 +595,14 @@ export default function ContasPagarPage() {
       pdf.line(marginLeft, y, marginRight, y);
       y += 5;
       pdf.setFontSize(10);
-      pdf.setFont('helvetica', 'bold');
+      pdf.setFont("helvetica", "bold");
       pdf.setTextColor(30, 30, 30);
-      pdf.text('TOTAL GERAL', marginLeft, y);
-      pdf.text(formatCurrency(reportTotal), marginRight, y, { align: 'right' });
-      pdf.save(`contas_pagar_${new Date().toISOString().split('T')[0]}.pdf`);
-      toast.success('PDF exportado com sucesso.');
+      pdf.text("TOTAL GERAL", marginLeft, y);
+      pdf.text(formatCurrency(reportTotal), marginRight, y, { align: "right" });
+      pdf.save(`contas_pagar_${new Date().toISOString().split("T")[0]}.pdf`);
+      toast.success("PDF exportado com sucesso.");
     } catch (e: any) {
-      toast.error(e?.message ?? 'Erro ao exportar PDF.');
+      toast.error(e?.message ?? "Erro ao exportar PDF.");
     } finally {
       setExportingPdf(false);
     }
@@ -593,16 +629,11 @@ export default function ContasPagarPage() {
               </Select>
             </div>
           )}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowReport(true)}
-            className="gap-2"
-          >
+          <Button variant="outline" size="sm" onClick={() => setShowReport(true)} className="gap-2">
             <FileText className="h-4 w-4" />
             Gerar Relatorio
           </Button>
-          {canCreate('contas_pagar') && (
+          {canCreate("contas_pagar") && (
             <Button size="sm" onClick={openNew}>
               <Plus className="h-4 w-4 mr-1" />
               Nova Conta
@@ -685,32 +716,74 @@ export default function ContasPagarPage() {
               <TableHead className="w-8">
                 <CheckSquare className="h-4 w-4 text-muted-foreground" />
               </TableHead>
-              <TableHead onClick={() => handleSort('numero')} className="cursor-pointer select-none hover:bg-muted/50">
-                <div className="flex items-center">Nº<SortIcon column="numero" /></div>
+              <TableHead onClick={() => handleSort("numero")} className="cursor-pointer select-none hover:bg-muted/50">
+                <div className="flex items-center">
+                  Nº
+                  <SortIcon column="numero" />
+                </div>
               </TableHead>
-              <TableHead onClick={() => handleSort('data_emissao')} className="cursor-pointer select-none hover:bg-muted/50">
-                <div className="flex items-center">Data Emissao<SortIcon column="data_emissao" /></div>
+              <TableHead
+                onClick={() => handleSort("data_emissao")}
+                className="cursor-pointer select-none hover:bg-muted/50"
+              >
+                <div className="flex items-center">
+                  Data Emissao
+                  <SortIcon column="data_emissao" />
+                </div>
               </TableHead>
-              <TableHead onClick={() => handleSort('empresa')} className="cursor-pointer select-none hover:bg-muted/50">
-                <div className="flex items-center">Empresa<SortIcon column="empresa" /></div>
+              <TableHead onClick={() => handleSort("empresa")} className="cursor-pointer select-none hover:bg-muted/50">
+                <div className="flex items-center">
+                  Empresa
+                  <SortIcon column="empresa" />
+                </div>
               </TableHead>
-              <TableHead onClick={() => handleSort('fornecedor')} className="cursor-pointer select-none hover:bg-muted/50">
-                <div className="flex items-center">Fornecedor<SortIcon column="fornecedor" /></div>
+              <TableHead
+                onClick={() => handleSort("fornecedor")}
+                className="cursor-pointer select-none hover:bg-muted/50"
+              >
+                <div className="flex items-center">
+                  Fornecedor
+                  <SortIcon column="fornecedor" />
+                </div>
               </TableHead>
-              <TableHead onClick={() => handleSort('valor_total')} className="cursor-pointer select-none hover:bg-muted/50">
-                <div className="flex items-center">Valor Total<SortIcon column="valor_total" /></div>
+              <TableHead
+                onClick={() => handleSort("valor_total")}
+                className="cursor-pointer select-none hover:bg-muted/50"
+              >
+                <div className="flex items-center">
+                  Valor Total
+                  <SortIcon column="valor_total" />
+                </div>
               </TableHead>
-              <TableHead onClick={() => handleSort('parcela')} className="cursor-pointer select-none hover:bg-muted/50">
-                <div className="flex items-center">Parcela<SortIcon column="parcela" /></div>
+              <TableHead onClick={() => handleSort("parcela")} className="cursor-pointer select-none hover:bg-muted/50">
+                <div className="flex items-center">
+                  Parcela
+                  <SortIcon column="parcela" />
+                </div>
               </TableHead>
-              <TableHead onClick={() => handleSort('vencimento')} className="cursor-pointer select-none hover:bg-muted/50">
-                <div className="flex items-center">Vencimento<SortIcon column="vencimento" /></div>
+              <TableHead
+                onClick={() => handleSort("vencimento")}
+                className="cursor-pointer select-none hover:bg-muted/50"
+              >
+                <div className="flex items-center">
+                  Vencimento
+                  <SortIcon column="vencimento" />
+                </div>
               </TableHead>
-              <TableHead onClick={() => handleSort('status')} className="cursor-pointer select-none hover:bg-muted/50">
-                <div className="flex items-center">Status Parcela<SortIcon column="status" /></div>
+              <TableHead onClick={() => handleSort("status")} className="cursor-pointer select-none hover:bg-muted/50">
+                <div className="flex items-center">
+                  Status Parcela
+                  <SortIcon column="status" />
+                </div>
               </TableHead>
-              <TableHead onClick={() => handleSort('observacao')} className="cursor-pointer select-none hover:bg-muted/50">
-                <div className="flex items-center">Observacao<SortIcon column="observacao" /></div>
+              <TableHead
+                onClick={() => handleSort("observacao")}
+                className="cursor-pointer select-none hover:bg-muted/50"
+              >
+                <div className="flex items-center">
+                  Observacao
+                  <SortIcon column="observacao" />
+                </div>
               </TableHead>
               <TableHead></TableHead>
             </TableRow>
@@ -745,14 +818,10 @@ export default function ContasPagarPage() {
                       onCheckedChange={() => toggleParcela(primeiraParcela.id)}
                     />
                   </TableCell>
-                  <TableCell className="font-bold text-primary">
-                    #{conta.id.slice(-6).toUpperCase()}
-                  </TableCell>
-                  <TableCell>
-                    {new Date(conta.data_emissao + 'T00:00:00').toLocaleDateString('pt-BR')}
-                  </TableCell>
-                  <TableCell className="font-medium">{conta.empresa_nome || '-'}</TableCell>
-                  <TableCell>{conta.fornecedor_nome || '-'}</TableCell>
+                  <TableCell className="font-bold text-primary">#{conta.id.slice(-6).toUpperCase()}</TableCell>
+                  <TableCell>{new Date(conta.data_emissao + "T00:00:00").toLocaleDateString("pt-BR")}</TableCell>
+                  <TableCell className="font-medium">{conta.empresa_nome || "-"}</TableCell>
+                  <TableCell>{conta.fornecedor_nome || "-"}</TableCell>
                   <TableCell className="font-mono">{formatCurrency(conta.valor_total)}</TableCell>
                   <TableCell className="text-center">
                     {temMaisParcelas ? (
@@ -763,13 +832,15 @@ export default function ContasPagarPage() {
                         </Badge>
                       </div>
                     ) : (
-                      <span>{primeiraParcela.numero_parcela}/{conta.quantidade_parcelas}</span>
+                      <span>
+                        {primeiraParcela.numero_parcela}/{conta.quantidade_parcelas}
+                      </span>
                     )}
                   </TableCell>
                   <TableCell>
-                    {primeiraParcela.data_vencimento 
-                      ? new Date(primeiraParcela.data_vencimento + 'T00:00:00').toLocaleDateString('pt-BR') 
-                      : '-'}
+                    {primeiraParcela.data_vencimento
+                      ? new Date(primeiraParcela.data_vencimento + "T00:00:00").toLocaleDateString("pt-BR")
+                      : "-"}
                   </TableCell>
                   <TableCell>
                     <Select
@@ -789,19 +860,21 @@ export default function ContasPagarPage() {
                       </SelectContent>
                     </Select>
                   </TableCell>
-                  <TableCell className="max-w-[150px] truncate">{primeiraParcela.observacao || conta.observacao || '-'}</TableCell>
+                  <TableCell className="max-w-[150px] truncate">
+                    {primeiraParcela.observacao || conta.observacao || "-"}
+                  </TableCell>
                   <TableCell>
                     <div className="flex gap-1">
                       <Button variant="ghost" size="sm" onClick={() => openParcelas(conta)}>
                         <Eye className="h-4 w-4 mr-1" />
-                        {temMaisParcelas ? 'Ver Todas' : 'Editar'}
+                        {temMaisParcelas ? "Ver Todas" : "Editar"}
                       </Button>
-                      {canEdit('contas_pagar') && (
+                      {canEdit("contas_pagar") && (
                         <Button variant="ghost" size="icon" onClick={() => openEdit(conta)}>
                           <Pencil className="h-4 w-4" />
                         </Button>
                       )}
-                      {canDelete('contas_pagar') && (
+                      {canDelete("contas_pagar") && (
                         <Button variant="ghost" size="icon" onClick={() => handleDelete(conta.id)}>
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -813,24 +886,26 @@ export default function ContasPagarPage() {
                 <TableRow key={conta.id}>
                   <TableCell />
                   <TableCell className="font-bold text-primary">#{conta.id.slice(-6).toUpperCase()}</TableCell>
-                  <TableCell>{new Date(conta.data_emissao + 'T00:00:00').toLocaleDateString('pt-BR')}</TableCell>
-                  <TableCell className="font-medium">{conta.empresa_nome || '-'}</TableCell>
-                  <TableCell>{conta.fornecedor_nome || '-'}</TableCell>
+                  <TableCell>{new Date(conta.data_emissao + "T00:00:00").toLocaleDateString("pt-BR")}</TableCell>
+                  <TableCell className="font-medium">{conta.empresa_nome || "-"}</TableCell>
+                  <TableCell>{conta.fornecedor_nome || "-"}</TableCell>
                   <TableCell className="font-mono">{formatCurrency(conta.valor_total)}</TableCell>
-                  <TableCell colSpan={3} className="text-center text-muted-foreground">Sem parcelas</TableCell>
-                  <TableCell>{conta.observacao || '-'}</TableCell>
+                  <TableCell colSpan={3} className="text-center text-muted-foreground">
+                    Sem parcelas
+                  </TableCell>
+                  <TableCell>{conta.observacao || "-"}</TableCell>
                   <TableCell>
                     <div className="flex gap-1">
                       <Button variant="ghost" size="sm" onClick={() => openParcelas(conta)}>
                         <Plus className="h-4 w-4 mr-1" />
                         Parcelas
                       </Button>
-                      {canEdit('contas_pagar') && (
+                      {canEdit("contas_pagar") && (
                         <Button variant="ghost" size="icon" onClick={() => openEdit(conta)}>
                           <Pencil className="h-4 w-4" />
                         </Button>
                       )}
-                      {canDelete('contas_pagar') && (
+                      {canDelete("contas_pagar") && (
                         <Button variant="ghost" size="icon" onClick={() => handleDelete(conta.id)}>
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -848,30 +923,30 @@ export default function ContasPagarPage() {
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>{editingId ? 'Editar' : 'Nova'} Conta a Pagar</DialogTitle>
+            <DialogTitle>{editingId ? "Editar" : "Nova"} Conta a Pagar</DialogTitle>
           </DialogHeader>
 
           <div className="grid gap-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>Data de EmissÃ£o *</Label>
-                <Input 
+                <Label>Data de Emissão *</Label>
+                <Input
                   type="date"
-                  value={form.data_emissao} 
-                  onChange={(e) => setForm((p) => ({ ...p, data_emissao: e.target.value }))} 
+                  value={form.data_emissao}
+                  onChange={(e) => setForm((p) => ({ ...p, data_emissao: e.target.value }))}
                 />
               </div>
               <div>
-                <Label>1Âº Vencimento *</Label>
-                <Input 
+                <Label>1º Vencimento *</Label>
+                <Input
                   type="date"
-                  value={form.data_primeiro_vencimento} 
-                  onChange={(e) => setForm((p) => ({ ...p, data_primeiro_vencimento: e.target.value }))} 
+                  value={form.data_primeiro_vencimento}
+                  onChange={(e) => setForm((p) => ({ ...p, data_primeiro_vencimento: e.target.value }))}
                 />
               </div>
             </div>
 
-            <EmpresaSelect 
+            <EmpresaSelect
               value={form.empresa_id}
               onChange={(value) => setForm((p) => ({ ...p, empresa_id: value }))}
               label="Empresa *"
@@ -888,43 +963,46 @@ export default function ContasPagarPage() {
               />
             </div>
 
-
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label>Valor Total *</Label>
-                <Input 
+                <Input
                   type="text"
                   value={form.valor_total}
                   onChange={(e) => setForm((p) => ({ ...p, valor_total: formatCurrencyInput(e.target.value) }))}
                   placeholder="R$ 0,00"
-                  disabled={editingId && items.find(item => item.id === editingId)?.parcelas.length > 0}
-                  className={editingId && items.find(item => item.id === editingId)?.parcelas.length > 0 ? "bg-muted" : ""}
+                  disabled={editingId && items.find((item) => item.id === editingId)?.parcelas.length > 0}
+                  className={
+                    editingId && items.find((item) => item.id === editingId)?.parcelas.length > 0 ? "bg-muted" : ""
+                  }
                 />
-                {editingId && items.find(item => item.id === editingId)?.parcelas.length > 0 && (
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Para alterar o valor, use a ediÃ§Ã£o de parcelas
-                  </p>
+                {editingId && items.find((item) => item.id === editingId)?.parcelas.length > 0 && (
+                  <p className="text-xs text-muted-foreground mt-1">Para alterar o valor, use a ediÃ§Ã£o de parcelas</p>
                 )}
               </div>
               <div>
                 <Label>Quantidade de Parcelas *</Label>
-                <Select 
-                  value={form.quantidade_parcelas} 
+                <Select
+                  value={form.quantidade_parcelas}
                   onValueChange={(value) => setForm((p) => ({ ...p, quantidade_parcelas: value }))}
-                  disabled={editingId && items.find(item => item.id === editingId)?.parcelas.length > 0}
+                  disabled={editingId && items.find((item) => item.id === editingId)?.parcelas.length > 0}
                 >
-                  <SelectTrigger className={editingId && items.find(item => item.id === editingId)?.parcelas.length > 0 ? "bg-muted" : ""}>
+                  <SelectTrigger
+                    className={
+                      editingId && items.find((item) => item.id === editingId)?.parcelas.length > 0 ? "bg-muted" : ""
+                    }
+                  >
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((num) => (
                       <SelectItem key={num} value={num.toString()}>
-                        {num} {num === 1 ? 'parcela' : 'parcelas'}
+                        {num} {num === 1 ? "parcela" : "parcelas"}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                {editingId && items.find(item => item.id === editingId)?.parcelas.length > 0 && (
+                {editingId && items.find((item) => item.id === editingId)?.parcelas.length > 0 && (
                   <p className="text-xs text-muted-foreground mt-1">
                     Para alterar as parcelas, use a ediÃ§Ã£o de parcelas
                   </p>
@@ -942,7 +1020,9 @@ export default function ContasPagarPage() {
                   dt.setMonth(dt.getMonth() + i);
                   return (
                     <div key={i} className="flex justify-between text-xs">
-                      <span>Parcela {i + 1}: {dt.toLocaleDateString('pt-BR')}</span>
+                      <span>
+                        Parcela {i + 1}: {dt.toLocaleDateString("pt-BR")}
+                      </span>
                       <span className="font-mono">{formatCurrency(val)}</span>
                     </div>
                   );
@@ -952,17 +1032,19 @@ export default function ContasPagarPage() {
 
             <div>
               <Label>ObservaÃ§Ã£o</Label>
-              <Input 
-                value={form.observacao} 
-                onChange={(e) => setForm((p) => ({ ...p, observacao: e.target.value }))} 
+              <Input
+                value={form.observacao}
+                onChange={(e) => setForm((p) => ({ ...p, observacao: e.target.value }))}
                 placeholder="ObservaÃ§Ãµes sobre a conta..."
               />
             </div>
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowDialog(false)}>Cancelar</Button>
-            <Button onClick={handleSubmit}>{editingId ? 'Atualizar' : 'Cadastrar'}</Button>
+            <Button variant="outline" onClick={() => setShowDialog(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleSubmit}>{editingId ? "Atualizar" : "Cadastrar"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -971,10 +1053,10 @@ export default function ContasPagarPage() {
       <ContasPagarParcelasDialog
         open={showParcelasDialog}
         onClose={() => setShowParcelasDialog(false)}
-        contaPagarId={contaParcelas?.id || ''}
+        contaPagarId={contaParcelas?.id || ""}
         parcelas={contaParcelas?.parcelas || []}
         onSave={handleParcelasSave}
-        userId={user?.id || ''}
+        userId={user?.id || ""}
       />
 
       <Dialog open={showReport} onOpenChange={setShowReport}>
@@ -991,24 +1073,25 @@ export default function ContasPagarPage() {
                   <span className="text-muted-foreground">Empresa:</span>
                   <p className="font-medium">
                     {filtrosAplicados.empresa
-                      ? empresas.find((e) => e.id === filtrosAplicados.empresa)?.nome || 'Nao encontrada'
-                      : 'Todas'}
+                      ? empresas.find((e) => e.id === filtrosAplicados.empresa)?.nome || "Nao encontrada"
+                      : "Todas"}
                   </p>
                 </div>
                 <div>
                   <span className="text-muted-foreground">Fornecedor:</span>
                   <p className="font-medium">
                     {filtrosAplicados.fornecedor
-                      ? fornecedores.find((f) => f.id === filtrosAplicados.fornecedor)?.nome_fornecedor || 'Nao encontrado'
-                      : 'Todos'}
+                      ? fornecedores.find((f) => f.id === filtrosAplicados.fornecedor)?.nome_fornecedor ||
+                        "Nao encontrado"
+                      : "Todos"}
                   </p>
                 </div>
                 <div>
                   <span className="text-muted-foreground">Periodo:</span>
                   <p className="font-medium">
                     {filtrosAplicados.startDate || filtrosAplicados.endDate
-                      ? `${filtrosAplicados.startDate ? format(filtrosAplicados.startDate, 'dd/MM/yyyy', { locale: ptBR }) : 'Inicio'} a ${filtrosAplicados.endDate ? format(filtrosAplicados.endDate, 'dd/MM/yyyy', { locale: ptBR }) : 'Fim'}`
-                      : 'Todo o periodo'}
+                      ? `${filtrosAplicados.startDate ? format(filtrosAplicados.startDate, "dd/MM/yyyy", { locale: ptBR }) : "Inicio"} a ${filtrosAplicados.endDate ? format(filtrosAplicados.endDate, "dd/MM/yyyy", { locale: ptBR }) : "Fim"}`
+                      : "Todo o periodo"}
                   </p>
                 </div>
               </div>
@@ -1019,9 +1102,7 @@ export default function ContasPagarPage() {
                 <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">Relatorio</p>
                 <div className="mt-1 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
                   <h3 className="text-base font-semibold leading-tight">Contas a Pagar</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Gerado em: {new Date().toLocaleDateString('pt-BR')}
-                  </p>
+                  <p className="text-sm text-muted-foreground">Gerado em: {new Date().toLocaleDateString("pt-BR")}</p>
                 </div>
               </div>
 
@@ -1050,7 +1131,7 @@ export default function ContasPagarPage() {
                             <div>
                               <p className="text-sm font-semibold">{group.dateLabel}</p>
                               <p className="text-xs text-muted-foreground">
-                                {group.parcels} parcela{group.parcels === 1 ? '' : 's'}
+                                {group.parcels} parcela{group.parcels === 1 ? "" : "s"}
                               </p>
                             </div>
                             <p className="text-base font-semibold">{formatCurrency(group.total)}</p>
@@ -1060,15 +1141,19 @@ export default function ContasPagarPage() {
                       ...group.items.map((item) => (
                         <TableRow key={`${item.conta.id}-${item.id}`}>
                           <TableCell className="py-1 text-xs">
-                            {new Date(`${item.data_vencimento}T00:00:00`).toLocaleDateString('pt-BR')}
+                            {new Date(`${item.data_vencimento}T00:00:00`).toLocaleDateString("pt-BR")}
                           </TableCell>
-                          <TableCell className="py-1 text-xs font-medium">{item.conta.empresa_nome || '-'}</TableCell>
-                          <TableCell className="py-1 text-xs">{item.conta.fornecedor_nome || '-'}</TableCell>
-                          <TableCell className="py-1 font-mono text-xs">#{item.conta.id.slice(-6).toUpperCase()}</TableCell>
+                          <TableCell className="py-1 text-xs font-medium">{item.conta.empresa_nome || "-"}</TableCell>
+                          <TableCell className="py-1 text-xs">{item.conta.fornecedor_nome || "-"}</TableCell>
+                          <TableCell className="py-1 font-mono text-xs">
+                            #{item.conta.id.slice(-6).toUpperCase()}
+                          </TableCell>
                           <TableCell className="py-1 text-center text-xs">
                             {item.numero_parcela}/{item.conta.quantidade_parcelas}
                           </TableCell>
-                          <TableCell className="py-1 text-right text-xs font-semibold">{formatCurrency(item.valor_parcela)}</TableCell>
+                          <TableCell className="py-1 text-right text-xs font-semibold">
+                            {formatCurrency(item.valor_parcela)}
+                          </TableCell>
                           <TableCell className="py-1">
                             <span className="rounded bg-gray-100 px-2 py-1 text-xs">{item.status}</span>
                           </TableCell>
@@ -1095,7 +1180,7 @@ export default function ContasPagarPage() {
               Fechar
             </Button>
             <Button onClick={handleExportPdf} disabled={exportingPdf || reportGroups.length === 0}>
-              {exportingPdf ? 'Exportando...' : 'Exportar PDF'}
+              {exportingPdf ? "Exportando..." : "Exportar PDF"}
             </Button>
           </DialogFooter>
         </DialogContent>
