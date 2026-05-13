@@ -417,7 +417,12 @@ export default function FaturadosParcelasPage() {
             </p>
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
+            {monthDetails && (
+              <p className="self-end pb-2 text-sm font-semibold text-blue-600">
+                {formatCurrencyBR(monthDetails.total)}
+              </p>
+            )}
             <div className="w-full sm:w-64">
               <EmpresaSelect
                 value={selectedCompany}
@@ -427,14 +432,8 @@ export default function FaturadosParcelasPage() {
               />
             </div>
 
-            {monthDetails && (
-              <p className="text-sm font-semibold text-blue-600 sm:order-0">{formatCurrencyBR(monthDetails.total)}</p>
-            )}
-
-            <ConfigurarLimiteModal 
-              onLimiteCriado={() => setRefreshKey(prev => prev + 1)}
-            >
-              <Button variant="outline" size="sm" className="w-full sm:w-auto">
+            <ConfigurarLimiteModal onLimiteCriado={() => setRefreshKey((prev) => prev + 1)}>
+              <Button variant="outline" size="sm" className="h-10 w-full sm:w-auto">
                 <Settings className="h-4 w-4 mr-2" />
                 Configurar Limite
               </Button>
@@ -444,7 +443,7 @@ export default function FaturadosParcelasPage() {
               type="button"
               onClick={handleExportPdf}
               disabled={exportingPdf || dailyGroups.length === 0}
-              className="w-full sm:w-auto"
+              className="h-10 w-full sm:w-auto"
               variant="outline"
             >
               {exportingPdf ? "Exportando..." : "Exportar PDF"}
@@ -477,7 +476,6 @@ export default function FaturadosParcelasPage() {
                   <TableHeader>
                     <TableRow>
                       <TableHead>Vencimento</TableHead>
-                      <TableHead>Tipo</TableHead>
                       <TableHead>Fornecedor</TableHead>
                       <TableHead>Obra</TableHead>
                       <TableHead>Pedido</TableHead>
@@ -488,7 +486,7 @@ export default function FaturadosParcelasPage() {
                   <TableBody>
                     {dailyGroups.map((day) => [
                       <TableRow key={day.key}>
-                        <TableCell colSpan={7}>
+                        <TableCell colSpan={6}>
                           <div className="flex justify-between items-center">
                             <div>
                               <p className="text-sm font-semibold">{day.label}</p>
@@ -510,28 +508,6 @@ export default function FaturadosParcelasPage() {
                             {installment.dueIso 
                               ? new Date(installment.dueIso + 'T00:00:00').toLocaleDateString('pt-BR')
                               : installment.due}
-                          </TableCell>
-                          <TableCell className="align-middle">
-                            <span
-                              className={`px-3 rounded text-xs font-medium ${
-                                installment.tipo === 'conta_pagar'
-                                  ? 'bg-orange-100 text-orange-800'
-                                  : 'bg-blue-100 text-blue-800'
-                              }`}
-                              style={{
-                                display: 'inline-block',
-                                height: '22px',
-                                lineHeight: '22px',
-                                textAlign: 'center',
-                                whiteSpace: 'nowrap',
-                                paddingLeft: '10px',
-                                paddingRight: '10px'
-                              }}
-                            >
-                              {installment.tipo === 'conta_pagar'
-                                ? 'Conta a Pagar'
-                                : 'Compra Faturada'}
-                            </span>
                           </TableCell>
                           <TableCell>
                             <div className="font-medium">{installment.supplier}</div>
