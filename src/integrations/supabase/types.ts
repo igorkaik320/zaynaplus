@@ -89,6 +89,50 @@ export type Database = {
         }
         Relationships: []
       }
+      contas_bancarias: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          digito_conta: string
+          empresa_id: string
+          id: string
+          nome_banco: string
+          nome_conta: string
+          numero_conta: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          digito_conta: string
+          empresa_id: string
+          id?: string
+          nome_banco: string
+          nome_conta: string
+          numero_conta: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          digito_conta?: string
+          empresa_id?: string
+          id?: string
+          nome_banco?: string
+          nome_conta?: string
+          numero_conta?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contas_bancarias_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contas_pagar: {
         Row: {
           created_at: string | null
