@@ -1035,7 +1035,7 @@ export default function ContasPagarPage() {
               <Input
                 value={form.observacao}
                 onChange={(e) => setForm((p) => ({ ...p, observacao: e.target.value }))}
-                placeholder="ObservaÃ§Ãµes sobre a conta..."
+                placeholder="Observações sobre a conta..."
               />
             </div>
           </div>
