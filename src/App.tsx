@@ -19,6 +19,8 @@ import FornecedoresPage from "./pages/FornecedoresPage";
 import EmpresasPage from "./pages/EmpresasPage";
 import ContasBancariasPage from "./pages/ContasBancariasPage";
 import ContasPagarPage from "@/pages/ContasPagarPage";
+import Index from "./pages/Index";
+import FaturadosParcelasPage from "./pages/FaturadosParcelasPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({
@@ -89,6 +91,8 @@ function HomeRoute() {
   if (permLoading) return <LoadingScreen />;
 
   const firstAccessibleRoute: Array<{ module: ModuleKey; path: string }> = [
+    { module: "controle_caixa", path: "/controle-caixa" },
+    { module: "parcelas_faturadas", path: "/parcelas-faturadas" },
     { module: "contas_pagar", path: "/contas-pagar" },
     { module: "fornecedores", path: "/fornecedores" },
     { module: "empresas", path: "/empresas" },
@@ -168,6 +172,8 @@ const App = () => (
                 <Routes>
                 <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
                 <Route path="/" element={<HomeRoute />} />
+                <Route path="/controle-caixa" element={<ModuleRoute module="controle_caixa"><Index /></ModuleRoute>} />
+                <Route path="/parcelas-faturadas" element={<ModuleRoute module="parcelas_faturadas"><FaturadosParcelasPage /></ModuleRoute>} />
                 <Route path="/contas-pagar" element={<ModuleRoute module="contas_pagar"><ContasPagarPage /></ModuleRoute>} />
                 <Route path="/fornecedores" element={<ModuleRoute module="fornecedores"><FornecedoresPage /></ModuleRoute>} />
                 <Route path="/empresas" element={<ModuleRoute module="empresas"><EmpresasPage /></ModuleRoute>} />
