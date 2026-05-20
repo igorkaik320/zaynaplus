@@ -21,6 +21,12 @@ import ContasBancariasPage from "./pages/ContasBancariasPage";
 import ContasPagarPage from "@/pages/ContasPagarPage";
 import Index from "./pages/Index";
 import FaturadosParcelasPage from "./pages/FaturadosParcelasPage";
+import AgendaPage from "./pages/AgendaPage";
+import PacientesPage from "./pages/PacientesPage";
+import ProntuariosPage from "./pages/ProntuariosPage";
+import ContasReceberPage from "./pages/ContasReceberPage";
+import ProfissionaisPage from "./pages/ProfissionaisPage";
+import ProcedimentosPage from "./pages/ProcedimentosPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({
@@ -91,6 +97,10 @@ function HomeRoute() {
   if (permLoading) return <LoadingScreen />;
 
   const firstAccessibleRoute: Array<{ module: ModuleKey; path: string }> = [
+    { module: "agenda", path: "/agenda" },
+    { module: "pacientes", path: "/pacientes" },
+    { module: "prontuario", path: "/prontuario" },
+    { module: "contas_receber", path: "/contas-receber" },
     { module: "controle_caixa", path: "/controle-caixa" },
     { module: "parcelas_faturadas", path: "/parcelas-faturadas" },
     { module: "contas_pagar", path: "/contas-pagar" },
@@ -175,6 +185,12 @@ const App = () => (
                 <Route path="/controle-caixa" element={<ModuleRoute module="controle_caixa"><Index /></ModuleRoute>} />
                 <Route path="/parcelas-faturadas" element={<ModuleRoute module="parcelas_faturadas"><FaturadosParcelasPage /></ModuleRoute>} />
                 <Route path="/contas-pagar" element={<ModuleRoute module="contas_pagar"><ContasPagarPage /></ModuleRoute>} />
+                <Route path="/contas-receber" element={<ModuleRoute module="contas_receber"><ContasReceberPage /></ModuleRoute>} />
+                <Route path="/agenda" element={<ModuleRoute module="agenda"><AgendaPage /></ModuleRoute>} />
+                <Route path="/pacientes" element={<ModuleRoute module="pacientes"><PacientesPage /></ModuleRoute>} />
+                <Route path="/prontuario" element={<ModuleRoute module="prontuario"><ProntuariosPage /></ModuleRoute>} />
+                <Route path="/profissionais" element={<ModuleRoute module="profissionais"><ProfissionaisPage /></ModuleRoute>} />
+                <Route path="/procedimentos" element={<ModuleRoute module="procedimentos"><ProcedimentosPage /></ModuleRoute>} />
                 <Route path="/fornecedores" element={<ModuleRoute module="fornecedores"><FornecedoresPage /></ModuleRoute>} />
                 <Route path="/empresas" element={<ModuleRoute module="empresas"><EmpresasPage /></ModuleRoute>} />
                 <Route path="/contas-bancarias" element={<ModuleRoute module="contas_bancarias"><ContasBancariasPage /></ModuleRoute>} />
