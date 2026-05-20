@@ -93,7 +93,7 @@ function HomeRoute() {
 
   if (!user && loading) return <LoadingScreen />;
   if (!user) return <Navigate to="/auth" />;
-  if (userRole === "admin") return <Navigate to="/contas-pagar" replace />;
+  if (userRole === "admin") return <Navigate to="/agenda" replace />;
   if (permLoading) return <LoadingScreen />;
 
   const firstAccessibleRoute: Array<{ module: ModuleKey; path: string }> = [
