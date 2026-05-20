@@ -14,6 +14,85 @@ export type Database = {
   }
   public: {
     Tables: {
+      agendamentos: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          data: string
+          duracao: number
+          hora: string
+          id: string
+          observacoes: string | null
+          paciente_id: string | null
+          paciente_nome: string
+          procedimento_id: string | null
+          procedimento_nome: string | null
+          profissional_id: string | null
+          profissional_nome: string | null
+          status: string
+          updated_at: string
+          valor: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          data: string
+          duracao?: number
+          hora: string
+          id?: string
+          observacoes?: string | null
+          paciente_id?: string | null
+          paciente_nome: string
+          procedimento_id?: string | null
+          procedimento_nome?: string | null
+          profissional_id?: string | null
+          profissional_nome?: string | null
+          status?: string
+          updated_at?: string
+          valor?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          duracao?: number
+          hora?: string
+          id?: string
+          observacoes?: string | null
+          paciente_id?: string | null
+          paciente_nome?: string
+          procedimento_id?: string | null
+          procedimento_nome?: string | null
+          profissional_id?: string | null
+          profissional_nome?: string | null
+          status?: string
+          updated_at?: string
+          valor?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agendamentos_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agendamentos_procedimento_id_fkey"
+            columns: ["procedimento_id"]
+            isOneToOne: false
+            referencedRelation: "procedimentos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agendamentos_profissional_id_fkey"
+            columns: ["profissional_id"]
+            isOneToOne: false
+            referencedRelation: "profissionais"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_log: {
         Row: {
           acao: string | null
@@ -261,6 +340,127 @@ export type Database = {
           },
         ]
       }
+      contas_receber: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          data_emissao: string
+          data_primeiro_vencimento: string | null
+          empresa_id: string | null
+          empresa_nome: string | null
+          id: string
+          observacao: string | null
+          origem: string | null
+          paciente_id: string | null
+          paciente_nome: string | null
+          quantidade_parcelas: number
+          status: string
+          updated_at: string
+          updated_by: string | null
+          valor_total: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          data_emissao?: string
+          data_primeiro_vencimento?: string | null
+          empresa_id?: string | null
+          empresa_nome?: string | null
+          id?: string
+          observacao?: string | null
+          origem?: string | null
+          paciente_id?: string | null
+          paciente_nome?: string | null
+          quantidade_parcelas?: number
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+          valor_total?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          data_emissao?: string
+          data_primeiro_vencimento?: string | null
+          empresa_id?: string | null
+          empresa_nome?: string | null
+          id?: string
+          observacao?: string | null
+          origem?: string | null
+          paciente_id?: string | null
+          paciente_nome?: string | null
+          quantidade_parcelas?: number
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+          valor_total?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contas_receber_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "pacientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contas_receber_parcelas: {
+        Row: {
+          conta_receber_id: string
+          created_at: string
+          created_by: string | null
+          data_recebimento: string | null
+          data_vencimento: string
+          id: string
+          numero_parcela: number
+          observacao: string | null
+          status: string
+          updated_at: string
+          updated_by: string | null
+          valor_parcela: number
+          valor_recebido: number | null
+        }
+        Insert: {
+          conta_receber_id: string
+          created_at?: string
+          created_by?: string | null
+          data_recebimento?: string | null
+          data_vencimento: string
+          id?: string
+          numero_parcela: number
+          observacao?: string | null
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+          valor_parcela: number
+          valor_recebido?: number | null
+        }
+        Update: {
+          conta_receber_id?: string
+          created_at?: string
+          created_by?: string | null
+          data_recebimento?: string | null
+          data_vencimento?: string
+          id?: string
+          numero_parcela?: number
+          observacao?: string | null
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+          valor_parcela?: number
+          valor_recebido?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contas_receber_parcelas_conta_receber_id_fkey"
+            columns: ["conta_receber_id"]
+            isOneToOne: false
+            referencedRelation: "contas_receber"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       empresas: {
         Row: {
           cnpj: string | null
@@ -393,6 +593,84 @@ export type Database = {
         }
         Relationships: []
       }
+      pacientes: {
+        Row: {
+          convenio: string | null
+          cpf: string | null
+          created_at: string
+          created_by: string | null
+          data_nascimento: string | null
+          email: string | null
+          endereco: string | null
+          id: string
+          nome: string
+          observacoes: string | null
+          observacoes_clinicas: string | null
+          telefone: string | null
+          updated_at: string
+        }
+        Insert: {
+          convenio?: string | null
+          cpf?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_nascimento?: string | null
+          email?: string | null
+          endereco?: string | null
+          id?: string
+          nome: string
+          observacoes?: string | null
+          observacoes_clinicas?: string | null
+          telefone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          convenio?: string | null
+          cpf?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_nascimento?: string | null
+          email?: string | null
+          endereco?: string | null
+          id?: string
+          nome?: string
+          observacoes?: string | null
+          observacoes_clinicas?: string | null
+          telefone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      procedimentos: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          duracao_media: number
+          id: string
+          nome: string
+          preco_padrao: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          duracao_media?: number
+          id?: string
+          nome: string
+          preco_padrao?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          duracao_media?: number
+          id?: string
+          nome?: string
+          preco_padrao?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           ativo: boolean
@@ -422,6 +700,114 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      profissionais: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          created_by: string | null
+          email: string | null
+          especialidade: string | null
+          id: string
+          nome: string
+          taxa_comissao: number
+          telefone: string | null
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          especialidade?: string | null
+          id?: string
+          nome: string
+          taxa_comissao?: number
+          telefone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          especialidade?: string | null
+          id?: string
+          nome?: string
+          taxa_comissao?: number
+          telefone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      prontuarios: {
+        Row: {
+          anexos: Json | null
+          created_at: string
+          created_by: string | null
+          data: string
+          diagnostico: string | null
+          id: string
+          observacoes: string | null
+          paciente_id: string | null
+          paciente_nome: string
+          prescricao: string | null
+          procedimento_realizado: string | null
+          profissional_id: string | null
+          profissional_nome: string | null
+          queixa: string | null
+          updated_at: string
+        }
+        Insert: {
+          anexos?: Json | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          diagnostico?: string | null
+          id?: string
+          observacoes?: string | null
+          paciente_id?: string | null
+          paciente_nome: string
+          prescricao?: string | null
+          procedimento_realizado?: string | null
+          profissional_id?: string | null
+          profissional_nome?: string | null
+          queixa?: string | null
+          updated_at?: string
+        }
+        Update: {
+          anexos?: Json | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          diagnostico?: string | null
+          id?: string
+          observacoes?: string | null
+          paciente_id?: string | null
+          paciente_nome?: string
+          prescricao?: string | null
+          procedimento_realizado?: string | null
+          profissional_id?: string | null
+          profissional_nome?: string | null
+          queixa?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prontuarios_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prontuarios_profissional_id_fkey"
+            columns: ["profissional_id"]
+            isOneToOne: false
+            referencedRelation: "profissionais"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       revisoes_combustivel: {
         Row: {

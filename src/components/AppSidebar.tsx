@@ -19,6 +19,7 @@ import {
   FileBarChart,
   Fuel,
   History,
+  HeartPulse,
   Landmark,
   LayoutDashboard,
   Lock,
@@ -27,6 +28,11 @@ import {
   MapPinned,
   Package,
   Receipt,
+  Stethoscope,
+  ClipboardList,
+  UserSquare2,
+  FileText,
+  CalendarRange,
   Settings,
   ShoppingCart,
   Truck,
@@ -65,12 +71,24 @@ export function AppSidebar() {
   const groups: MenuGroup[] = [];
 
   groups.push({
+    key: 'clinica',
+    label: 'Clínica',
+    icon: HeartPulse,
+    items: [
+      { title: 'Agenda', url: '/agenda', icon: CalendarRange, module: 'agenda' },
+      { title: 'Pacientes', url: '/pacientes', icon: UserSquare2, module: 'pacientes' },
+      { title: 'Prontuário', url: '/prontuario', icon: FileText, module: 'prontuario' },
+    ],
+  });
+
+  groups.push({
     key: 'financeiro',
     label: 'Financeiro',
     icon: CircleDollarSign,
     items: [
       { title: 'Controle de Caixa', url: '/controle-caixa', icon: Receipt, module: 'controle_caixa' },
       { title: 'Contas a Pagar', url: '/contas-pagar', icon: Package, module: 'contas_pagar' },
+      { title: 'Contas a Receber', url: '/contas-receber', icon: CircleDollarSign, module: 'contas_receber' },
       { title: 'Parcelas Faturadas', url: '/parcelas-faturadas', icon: FileBarChart, module: 'parcelas_faturadas' },
     ],
   });
@@ -80,6 +98,8 @@ export function AppSidebar() {
     label: 'Cadastros',
     icon: Cog,
     items: [
+      { title: 'Profissionais', url: '/profissionais', icon: Stethoscope, module: 'profissionais' },
+      { title: 'Procedimentos', url: '/procedimentos', icon: ClipboardList, module: 'procedimentos' },
       { title: 'Fornecedores', url: '/fornecedores', icon: Truck, module: 'fornecedores' },
       { title: 'Empresas', url: '/empresas', icon: Building2, module: 'empresas' },
       { title: 'Conta Bancaria', url: '/contas-bancarias', icon: Landmark, module: 'contas_bancarias' },
