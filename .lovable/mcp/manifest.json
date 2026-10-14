@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "sdk_version": "3.0.6",
+  "path": "/functions/v1/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://ocyxzdfhujwpjrnoubod.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "control-zayna",
+      "version": "0.1.0",
+      "title": "control zayna"
+    },
+    "tools": [
+      {
+        "name": "list_contas_pagar",
+        "title": "Listar contas a pagar",
+        "description": "Lista as contas a pagar mais recentes, opcionalmente filtrando por status ou fornecedor.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "status": {
+              "description": "Filtrar por status (ex.: aberto, pago).",
+              "type": "string"
+            },
+            "fornecedor": {
+              "description": "Parte do nome do fornecedor.",
+              "type": "string"
+            },
+            "limit": {
+              "default": 20,
+              "description": "Quantidade máxima de registros.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_fornecedores",
+        "title": "Listar fornecedores",
+        "description": "Busca fornecedores cadastrados pelo nome ou CNPJ/CPF.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "busca": {
+              "description": "Parte do nome, razão social ou CNPJ/CPF.",
+              "type": "string"
+            },
+            "limit": {
+              "default": 20,
+              "description": "Quantidade máxima de registros.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
