@@ -1,3 +1,4 @@
+import { oauthReturnPath } from "@/lib/oauth-return-path";
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
@@ -135,7 +136,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { display_name: displayName } },
+      options: {
+        data: { display_name: displayName },
+        emailRedirectTo: new URL(
+          oauthReturnPath(new URLSearchParams(window.location.search).get("next")),
+          window.location.origin,
+        ).href,
+      },
     });
     return { error };
   };

@@ -28,6 +28,8 @@ import ContasReceberPage from "./pages/ContasReceberPage";
 import ProfissionaisPage from "./pages/ProfissionaisPage";
 import ProcedimentosPage from "./pages/ProcedimentosPage";
 import NotFound from "./pages/NotFound";
+import OAuthConsent from "./pages/OAuthConsent";
+import { oauthReturnPath } from "@/lib/oauth-return-path";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -164,7 +166,11 @@ function AuthRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
 
   if (!user && loading) return null;
-  if (user) return <Navigate to="/" />;
+  if (user) {
+    const next = oauthReturnPath(new URLSearchParams(window.location.search).get("next"));
+    if (next !== "/") { window.location.replace(next); return null; }
+    return <Navigate to="/" />;
+  }
 
   return <>{children}</>;
 }
@@ -182,6 +188,7 @@ const App = () => (
                 <Routes>
                 <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
                 <Route path="/" element={<HomeRoute />} />
+                <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
                 <Route path="/controle-caixa" element={<ModuleRoute module="controle_caixa"><Index /></ModuleRoute>} />
                 <Route path="/parcelas-faturadas" element={<ModuleRoute module="parcelas_faturadas"><FaturadosParcelasPage /></ModuleRoute>} />
                 <Route path="/contas-pagar" element={<ModuleRoute module="contas_pagar"><ContasPagarPage /></ModuleRoute>} />
